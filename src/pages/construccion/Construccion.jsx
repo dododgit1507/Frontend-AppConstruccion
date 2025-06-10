@@ -1,10 +1,39 @@
+import ProjectSections from '../../components/ProjectSections';
+
 const Construccion = () => {
+  // Datos específicos para construcción
+  const construccionData = {
+    gestion: {
+      progreso: '65%',
+      tareasCompletadas: '24/37',
+      diasRestantes: '45',
+      presupuestoUsado: '58%'
+    },
+    manoObra: {
+      supervisores: 3,
+      operadores: 15,
+      tecnicos: 8,
+      seguridad: 4
+    },
+    permisos: {
+      licenciaConstruccion: 'approved',
+      permisoAmbiental: 'pending',
+      autorizacionMunicipal: 'approved'
+    },
+    campamento: {
+      status: 'operativo'
+    },
+    lookAhead: {
+      proximasActividades: 8
+    }
+  };
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Construcción</h1>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <p>Gestión de proyectos de construcción</p>
-      </div>
+    <div className="p-6">
+      <ProjectSections 
+        projectType="construcción" 
+        projectData={construccionData} 
+      />
     </div>
   );
 };

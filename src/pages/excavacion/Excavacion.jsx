@@ -1,10 +1,39 @@
+import ProjectSections from '../../components/ProjectSections';
+
 const Excavacion = () => {
+  // Datos específicos para excavación
+  const excavacionData = {
+    gestion: {
+      progreso: '91%',
+      tareasCompletadas: '22/24',
+      diasRestantes: '3',
+      presupuestoUsado: '87%'
+    },
+    manoObra: {
+      supervisores: 2,
+      operadores: 12,
+      tecnicos: 6,
+      seguridad: 3
+    },
+    permisos: {
+      licenciaExcavacion: 'approved',
+      permisoAmbiental: 'approved',
+      autorizacionMunicipal: 'approved'
+    },
+    campamento: {
+      status: 'operativo'
+    },
+    lookAhead: {
+      proximasActividades: 2
+    }
+  };
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Excavación</h1>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <p>Gestión de proyectos de excavación</p>
-      </div>
+    <div className="p-6">
+      <ProjectSections 
+        projectType="excavación" 
+        projectData={excavacionData} 
+      />
     </div>
   );
 };

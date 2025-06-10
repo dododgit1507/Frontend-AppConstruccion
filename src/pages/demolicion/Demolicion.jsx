@@ -1,10 +1,39 @@
+import ProjectSections from '../../components/ProjectSections';
+
 const Demolicion = () => {
+  // Datos específicos para demolición
+  const demolicionData = {
+    gestion: {
+      progreso: '82%',
+      tareasCompletadas: '15/18',
+      diasRestantes: '8',
+      presupuestoUsado: '73%'
+    },
+    manoObra: {
+      supervisores: 2,
+      operadores: 8,
+      tecnicos: 4,
+      seguridad: 3
+    },
+    permisos: {
+      licenciaDemolicion: 'approved',
+      permisoAmbiental: 'approved',
+      autorizacionMunicipal: 'approved'
+    },
+    campamento: {
+      status: 'operativo'
+    },
+    lookAhead: {
+      proximasActividades: 4
+    }
+  };
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Demolición</h1>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <p>Gestión de proyectos de demolición</p>
-      </div>
+    <div className="p-6">
+      <ProjectSections 
+        projectType="demolición" 
+        projectData={demolicionData} 
+      />
     </div>
   );
 };
