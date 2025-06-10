@@ -20,6 +20,29 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/ThemeContext';
 import '../../components/charts/EngineeringCharts.css';
+import { 
+  ProgressVsScheduleChart, 
+  ProductivityChart, 
+  QualityControlChart, 
+  MaterialConsumptionChart,
+  ResourcePlanningChart 
+} from '../../components/charts/EngineeringCharts';
+import { 
+  SafetyChart, 
+  CostAnalysisChart, 
+  EquipmentEfficiencyChart, 
+  WeatherImpactChart,
+  KPIRadialChart 
+} from '../../components/charts/AdvancedCharts';
+import { 
+  EquipmentUtilizationChart, 
+  ConstructionTimelineChart, 
+  SiteSafetyMetricsChart, 
+  EnvironmentalConditionsChart,
+  MaterialStockChart,
+  ProductivityDashboardChart,
+  QualityCertificationChart 
+} from '../../components/charts/ConstructionCharts';
 
 const Dashboard = () => {
   const { isDark } = useApp();
@@ -255,6 +278,109 @@ const Dashboard = () => {
                 <div className="tech-progress-fill" style={{width: '60%', background: 'rgb(var(--color-info))'}}></div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>      {/* Dashboard de Productividad en Tiempo Real */}
+      <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+        <ProductivityDashboardChart />
+      </div>
+
+      {/* Gráficos Profesionales de Ingeniería */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-theme-text flex items-center space-x-2">
+            <BarChart3 className="text-primary" size={24} />
+            <span>Análisis de Ingeniería</span>
+          </h2>
+          <div className="text-sm text-theme-text-secondary">
+            Actualizado en tiempo real
+          </div>
+        </div>
+        
+        {/* Primera fila de gráficos */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <ProgressVsScheduleChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <ProductivityChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <QualityControlChart />
+          </div>
+        </div>
+        
+        {/* Segunda fila de gráficos */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <MaterialConsumptionChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <ResourcePlanningChart />
+          </div>
+        </div>
+        
+        {/* Tercera fila - Gráficos avanzados */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <SafetyChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <CostAnalysisChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <EquipmentEfficiencyChart />
+          </div>
+        </div>
+          {/* Cuarta fila - Análisis meteorológico y KPIs */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <WeatherImpactChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <KPIRadialChart />
+          </div>
+        </div>
+      </div>
+
+      {/* Gráficos Especializados de Construcción */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-theme-text flex items-center space-x-2">
+            <Building className="text-warning" size={24} />
+            <span>Monitoreo Especializado de Obra</span>
+          </h2>
+          <div className="text-sm text-theme-text-secondary">
+            Datos en vivo de la construcción
+          </div>
+        </div>
+        
+        {/* Primera fila - Timeline y Equipos */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+            <ConstructionTimelineChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <EquipmentUtilizationChart />
+          </div>
+        </div>
+        
+        {/* Segunda fila - Seguridad y Ambiente */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <SiteSafetyMetricsChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <EnvironmentalConditionsChart />
+          </div>
+        </div>
+          {/* Tercera fila - Materiales y Calidad */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <MaterialStockChart />
+          </div>
+          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+            <QualityCertificationChart />
           </div>
         </div>
       </div>
