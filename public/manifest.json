@@ -1,0 +1,24 @@
+{
+  "name": "BuildApp - Gestión de Construcción",
+  "short_name": "BuildApp",
+  "description": "Sistema profesional de gestión para proyectos de construcción e ingeniería",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-32x32.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "screenshots": []
+}

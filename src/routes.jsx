@@ -1,5 +1,7 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Login from './auth/Login';
+import ProtectedRoute from './auth/ProtectedRoute';
+import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/dashboard/Dashboard';
 import Demolicion from './pages/demolicion/Demolicion';
@@ -8,14 +10,31 @@ import Excavacion from './pages/excavacion/Excavacion';
 import Acabados from './pages/acabados/Acabados';
 
 export const router = createBrowserRouter([
+  // Ruta raíz - redirige a login
   {
     path: '/',
-    element: <MainLayout />,
+    element: <Navigate to="/login" replace />
+  },
+  // Rutas de autenticación (públicas)
+  {
+    path: '/login',
+    element: <AuthLayout />,
     children: [
       {
-        path: 'auth/login',
+        index: true,
         element: <Login />
-      },
+      }
+    ]
+  },
+  // Rutas protegidas (requieren autenticación)
+  {
+    path: '/dashboard',
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
+    children: [
       {
         index: true,
         element: <Dashboard />
@@ -37,5 +56,10 @@ export const router = createBrowserRouter([
         element: <Acabados />
       }
     ]
+  },
+  // Ruta catch-all para manejar rutas no encontradas
+  {
+    path: '*',
+    element: <Navigate to="/login" replace />
   }
 ]);

@@ -21,39 +21,38 @@ import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme, isDark } = useApp();
+  const { usuario, Logout } = useAuth();
   const location = useLocation();
-  const { Logout } = useAuth();
-
   const menuItems = [
     {
       title: 'Panel de Control',
       icon: LayoutDashboard,
-      path: '/',
-      active: location.pathname === '/'
+      path: '/dashboard',
+      active: location.pathname === '/dashboard'
     },
     {
       title: 'Demolición',
       icon: Hammer,
-      path: '/demolicion',
-      active: location.pathname === '/demolicion'
+      path: '/dashboard/demolicion',
+      active: location.pathname === '/dashboard/demolicion'
     },
     {
       title: 'Construcción',
       icon: Building,
-      path: '/construccion',
-      active: location.pathname === '/construccion'
+      path: '/dashboard/construccion',
+      active: location.pathname === '/dashboard/construccion'
     },
     {
       title: 'Excavación',
       icon: Truck,
-      path: '/excavacion',
-      active: location.pathname === '/excavacion'
+      path: '/dashboard/excavacion',
+      active: location.pathname === '/dashboard/excavacion'
     },
     {
       title: 'Acabados',
       icon: Paintbrush,
-      path: '/acabados',
-      active: location.pathname === '/acabados'
+      path: '/dashboard/acabados',
+      active: location.pathname === '/dashboard/acabados'
     }
   ];
   return (
@@ -134,8 +133,12 @@ const MainLayout = () => {
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-theme-background" />
               </div>
               <div>
-                <p className="font-medium text-theme-text text-sm">Jair Quispe</p>
-                <p className="text-xs text-theme-text-secondary">Supervisor</p>
+                <p className="font-medium text-theme-text text-sm">
+                  {usuario?.nombre || 'Usuario'}
+                </p>
+                <p className="text-xs text-theme-text-secondary">
+                  {usuario?.rol || 'Supervisor'}
+                </p>
               </div>
             </div>
             

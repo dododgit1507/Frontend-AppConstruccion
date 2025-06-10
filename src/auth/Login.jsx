@@ -1,20 +1,22 @@
 import { useForm } from "react-hook-form"
 import { useAuth } from "../context/AuthContext"
 import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 
 const Login = () => {
-
-  const { register, handleSubmit, formState: { errors }, formState: { isSubmitting } } = useForm();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
   const navigate = useNavigate();
-  const { Login, isAuthenticated } = useAuth();
+  const { Login, isAuthenticated, usuario } = useAuth();
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const onSubmit = async (data) => {
-    console.log(data);
     await Login(data);
-    // Redirect to dashboard after successful login
-    if (localStorage.getItem("isAuthenticated")) {
-      navigate("/dashboard");
-    }
   }
 
   return (
@@ -27,7 +29,7 @@ const Login = () => {
             <input 
               type="email" 
               id="correo" 
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" 
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" 
               placeholder="ejemplo@correo.com"
               {...register("correo", { required: "El correo es requerido" })} 
             />
@@ -38,7 +40,7 @@ const Login = () => {
             <input 
               type="password" 
               id="contrasena" 
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" 
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" 
               placeholder="••••••••"
               {...register("contrasena", { required: "La contraseña es requerida" })} 
             />
@@ -46,8 +48,7 @@ const Login = () => {
           </div>
           <button 
             type="submit"
-            className="w-full py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-orange-500/30 flex items-center justify-center"
-            disabled={isSubmitting}
+            className="w-full py-3 px-4 bg-primary hover:bg-primary-dark text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-primary/30 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"            disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
@@ -63,7 +64,6 @@ const Login = () => {
       </div>
     </div>
   )
-
 }
 
 export default Login
