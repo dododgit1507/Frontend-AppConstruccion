@@ -1,0 +1,163 @@
+/* Componentes de gráficos adicionales para Dashboard */
+
+/* Gráfico de línea temporal simple */
+.timeline-chart {
+  position: relative;
+  height: 120px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(var(--color-primary), 0.1) 25%, 
+    rgba(var(--color-success), 0.1) 50%, 
+    rgba(var(--color-info), 0.1) 75%, 
+    transparent 100%);
+  border-radius: 8px;
+}
+
+.timeline-chart::before {
+  content: '';
+  position: absolute;
+  bottom: 20px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgb(var(--color-error)) 0%, 
+    rgb(var(--color-warning)) 25%, 
+    rgb(var(--color-success)) 50%, 
+    rgb(var(--color-info)) 100%);
+  border-radius: 2px;
+}
+
+/* Puntos en la línea de tiempo */
+.timeline-point {
+  position: absolute;
+  bottom: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid rgb(var(--bg-primary));
+}
+
+.timeline-point-1 { left: 10%; background: rgb(var(--color-error)); }
+.timeline-point-2 { left: 35%; background: rgb(var(--color-warning)); }
+.timeline-point-3 { left: 65%; background: rgb(var(--color-success)); }
+.timeline-point-4 { left: 90%; background: rgb(var(--color-info)); }
+
+/* Gráfico de gauge/medidor */
+.gauge-container {
+  position: relative;
+  width: 120px;
+  height: 60px;
+  margin: 0 auto;
+}
+
+.gauge-bg {
+  width: 120px;
+  height: 60px;
+  border: 8px solid rgb(var(--bg-tertiary));
+  border-bottom: none;
+  border-radius: 120px 120px 0 0;
+  position: relative;
+}
+
+.gauge-fill {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 120px;
+  height: 60px;
+  border: 8px solid transparent;
+  border-bottom: none;
+  border-radius: 120px 120px 0 0;
+  background: conic-gradient(
+    from 180deg, 
+    rgb(var(--color-error)) 0deg 60deg,
+    rgb(var(--color-warning)) 60deg 120deg,
+    rgb(var(--color-success)) 120deg 180deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+  -webkit-mask-composite: subtract;
+  mask: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+  mask-composite: subtract;
+}
+
+/* Grid de ingeniería */
+.engineering-grid {
+  background-image: 
+    linear-gradient(rgba(var(--border-primary), 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--border-primary), 0.3) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border-radius: 8px;
+}
+
+/* Barras de progreso estilo técnico */
+.tech-progress-bar {
+  position: relative;
+  background: rgb(var(--bg-tertiary));
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tech-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(var(--color-primary), 0.8) 0%, 
+    rgb(var(--color-primary)) 100%);
+  border-radius: 4px;
+  position: relative;
+  transition: width 0.8s ease-in-out;
+}
+
+.tech-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255,255,255,0.2) 50%, 
+    transparent 100%);
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Efecto de resplandor para métricas importantes */
+.metric-glow {
+  box-shadow: 
+    0 0 20px rgba(var(--color-primary), 0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* Indicadores de estado tipo LED */
+.status-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.status-led.active {
+  background: rgb(var(--color-success));
+  box-shadow: 
+    0 0 6px rgb(var(--color-success)),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.status-led.warning {
+  background: rgb(var(--color-warning));
+  box-shadow: 
+    0 0 6px rgb(var(--color-warning)),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.status-led.inactive {
+  background: rgb(var(--bg-tertiary));
+  border: 1px solid rgb(var(--border-primary));
+}

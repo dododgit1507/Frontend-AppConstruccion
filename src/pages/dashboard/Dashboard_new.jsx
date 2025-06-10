@@ -19,7 +19,6 @@ import {
   Wrench
 } from 'lucide-react';
 import { useApp } from '../../context/ThemeContext';
-import '../../components/charts/EngineeringCharts.css';
 
 const Dashboard = () => {
   const { isDark } = useApp();
@@ -40,39 +39,38 @@ const Dashboard = () => {
       </div>
 
       {/* Métricas Principales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">        {/* Personal Activo */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Personal Activo */}
         <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-success transition-all card-hover">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-success-light rounded-xl">
               <Users className="text-success" size={24} />
             </div>
-            <div className="flex items-center space-x-1">
-              <span className="status-led active"></span>
-              <span className="text-xs px-2 py-1 bg-success-light text-success rounded-full">Todas las etapas</span>
-            </div>
+            <span className="text-xs px-2 py-1 bg-success-light text-success rounded-full">Todas las etapas</span>
           </div>
           <div>
             <p className="text-sm font-medium text-theme-text-secondary mb-1">Personal Activo</p>
             <p className="text-3xl font-bold text-theme-text mb-1">20</p>
             <p className="text-xs text-success">✓ En operación</p>
           </div>
-        </div>        {/* Equipos en Uso */}
+        </div>
+
+        {/* Equipos en Uso */}
         <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-warning transition-all card-hover">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-warning-light rounded-xl">
               <Truck className="text-warning" size={24} />
             </div>
-            <div className="flex items-center space-x-1">
-              <span className="status-led inactive"></span>
-              <span className="text-xs px-2 py-1 bg-warning-light text-warning rounded-full">Standby</span>
-            </div>
+            <span className="text-xs px-2 py-1 bg-warning-light text-warning rounded-full">Standby</span>
           </div>
           <div>
             <p className="text-sm font-medium text-theme-text-secondary mb-1">Equipos en Uso</p>
             <p className="text-3xl font-bold text-theme-text mb-1">0</p>
             <p className="text-xs text-warning">⚠ En operación</p>
           </div>
-        </div>        {/* Horas Trabajadas */}
+        </div>
+
+        {/* Horas Trabajadas */}
         <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-info transition-all card-hover">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-info-light rounded-xl">
@@ -84,16 +82,11 @@ const Dashboard = () => {
             <p className="text-sm font-medium text-theme-text-secondary mb-1">Horas Trabajadas</p>
             <p className="text-3xl font-bold text-theme-text mb-1">840</p>
             <p className="text-xs text-info">📅 Esta semana</p>
-            {/* Timeline visual */}
-            <div className="mt-3 timeline-chart">
-              <div className="timeline-point timeline-point-1"></div>
-              <div className="timeline-point timeline-point-2"></div>
-              <div className="timeline-point timeline-point-3"></div>
-              <div className="timeline-point timeline-point-4"></div>
-            </div>
           </div>
-        </div>        {/* Presupuesto Utilizado */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-primary transition-all card-hover metric-glow">
+        </div>
+
+        {/* Presupuesto Utilizado */}
+        <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-primary transition-all card-hover">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-primary-light rounded-xl">
               <TrendingUp className="text-primary" size={24} />
@@ -104,20 +97,15 @@ const Dashboard = () => {
             <p className="text-sm font-medium text-theme-text-secondary mb-1">Presupuesto Utilizado</p>
             <p className="text-3xl font-bold text-theme-text mb-1">72%</p>
             <p className="text-xs text-theme-text-secondary">$2.52M de $3.5M total</p>
-            {/* Gauge visual */}
-            <div className="mt-3 gauge-container">
-              <div className="gauge-bg">
-                <div className="gauge-fill"></div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
       {/* Grid Principal - 3 Columnas */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Columna 1: Estado de Permisos */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+        
+        {/* Columna 1: Estado de Permisos */}
+        <div className="bg-surface p-6 rounded-2xl border border-theme-border">
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-success-light rounded-lg">
               <FileCheck className="text-success" size={20} />
@@ -130,7 +118,6 @@ const Dashboard = () => {
               <div className="flex items-center space-x-2">
                 <Shield className="text-success" size={16} />
                 <span className="text-success font-medium">Vigentes</span>
-                <span className="status-led active"></span>
               </div>
               <span className="text-2xl font-bold text-success">2</span>
             </div>
@@ -139,7 +126,6 @@ const Dashboard = () => {
               <div className="flex items-center space-x-2">
                 <AlertTriangle className="text-theme-text-secondary" size={16} />
                 <span className="text-theme-text-secondary font-medium">Por Vencer</span>
-                <span className="status-led inactive"></span>
               </div>
               <span className="text-2xl font-bold text-theme-text-secondary">0</span>
             </div>
@@ -162,11 +148,11 @@ const Dashboard = () => {
             <h3 className="text-lg font-semibold text-theme-text">Instalaciones Campamento</h3>
           </div>
           
-          <div className="space-y-4">            <div className="flex items-center justify-between p-3 bg-info-light rounded-xl">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3 bg-info-light rounded-xl">
               <div className="flex items-center space-x-2">
                 <Zap className="text-info" size={16} />
                 <span className="text-info font-medium">Operativas</span>
-                <span className="status-led active"></span>
               </div>
               <span className="text-2xl font-bold text-info">6</span>
             </div>
@@ -175,7 +161,6 @@ const Dashboard = () => {
               <div className="flex items-center space-x-2">
                 <Users className="text-success" size={16} />
                 <span className="text-success font-medium">Personal Activo</span>
-                <span className="status-led active"></span>
               </div>
               <span className="text-2xl font-bold text-success">20</span>
             </div>
@@ -184,7 +169,6 @@ const Dashboard = () => {
               <div className="flex items-center space-x-2">
                 <Wrench className="text-warning" size={16} />
                 <span className="text-warning font-medium">Equipos</span>
-                <span className="status-led inactive"></span>
               </div>
               <span className="text-2xl font-bold text-warning">0</span>
             </div>
@@ -200,7 +184,8 @@ const Dashboard = () => {
             <h3 className="text-lg font-semibold text-theme-text">Avance General</h3>
           </div>
           
-          <div className="space-y-4">            {/* Demolición */}
+          <div className="space-y-4">
+            {/* Demolición */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
@@ -209,8 +194,8 @@ const Dashboard = () => {
                 </div>
                 <span className="text-error font-bold">75%</span>
               </div>
-              <div className="tech-progress-bar h-3">
-                <div className="tech-progress-fill" style={{width: '75%', background: 'rgb(var(--color-error))'}}></div>
+              <div className="w-full bg-surface-muted rounded-full h-2">
+                <div className="bg-error h-2 rounded-full w-3/4"></div>
               </div>
             </div>
 
@@ -223,8 +208,8 @@ const Dashboard = () => {
                 </div>
                 <span className="text-warning font-bold">0%</span>
               </div>
-              <div className="tech-progress-bar h-3">
-                <div className="tech-progress-fill" style={{width: '0%', background: 'rgb(var(--color-warning))'}}></div>
+              <div className="w-full bg-surface-muted rounded-full h-2">
+                <div className="bg-warning h-2 rounded-full w-0"></div>
               </div>
             </div>
 
@@ -237,8 +222,8 @@ const Dashboard = () => {
                 </div>
                 <span className="text-success font-bold">85%</span>
               </div>
-              <div className="tech-progress-bar h-3">
-                <div className="tech-progress-fill" style={{width: '85%', background: 'rgb(var(--color-success))'}}></div>
+              <div className="w-full bg-surface-muted rounded-full h-2">
+                <div className="bg-success h-2 rounded-full" style={{width: '85%'}}></div>
               </div>
             </div>
 
@@ -251,8 +236,8 @@ const Dashboard = () => {
                 </div>
                 <span className="text-info font-bold">60%</span>
               </div>
-              <div className="tech-progress-bar h-3">
-                <div className="tech-progress-fill" style={{width: '60%', background: 'rgb(var(--color-info))'}}></div>
+              <div className="w-full bg-surface-muted rounded-full h-2">
+                <div className="bg-info h-2 rounded-full w-3/5"></div>
               </div>
             </div>
           </div>
@@ -261,8 +246,9 @@ const Dashboard = () => {
 
       {/* Gráficos de Seguimiento */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Progreso por Etapa */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+        
+        {/* Progreso por Etapa */}
+        <div className="bg-surface p-6 rounded-2xl border border-theme-border">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-info-light rounded-lg">
@@ -275,29 +261,23 @@ const Dashboard = () => {
             </button>
           </div>
           
-          {/* Gráfico de Barras Técnico */}
+          {/* Gráfico de Barras Simple */}
           <div className="space-y-4">
             {[
-              { name: 'Demolición', progress: 75, color: 'rgb(var(--color-error))', icon: Hammer },
-              { name: 'Excavación', progress: 0, color: 'rgb(var(--color-warning))', icon: Truck },
-              { name: 'Construcción', progress: 85, color: 'rgb(var(--color-success))', icon: Building },
-              { name: 'Acabados', progress: 60, color: 'rgb(var(--color-info))', icon: HardHat }
+              { name: 'Demolición', progress: 75, color: 'bg-error' },
+              { name: 'Excavación', progress: 0, color: 'bg-warning' },
+              { name: 'Construcción', progress: 85, color: 'bg-success' },
+              { name: 'Acabados', progress: 60, color: 'bg-info' }
             ].map((stage, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <stage.icon size={16} style={{color: stage.color}} />
-                    <span className="text-sm font-medium text-theme-text">{stage.name}</span>
-                  </div>
+                  <span className="text-sm font-medium text-theme-text">{stage.name}</span>
                   <span className="text-sm font-bold text-theme-text">{stage.progress}%</span>
                 </div>
-                <div className="tech-progress-bar h-4">
+                <div className="w-full bg-surface-muted rounded-full h-3">
                   <div 
-                    className="tech-progress-fill"
-                    style={{ 
-                      width: `${stage.progress}%`,
-                      background: stage.color
-                    }}
+                    className={`${stage.color} h-3 rounded-full transition-all duration-500`}
+                    style={{ width: `${stage.progress}%` }}
                   ></div>
                 </div>
               </div>
