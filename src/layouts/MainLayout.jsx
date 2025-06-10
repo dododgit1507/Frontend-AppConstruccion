@@ -17,11 +17,11 @@ import {
   Moon
 } from 'lucide-react';
 import { useApp } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
+// COMENTADO TEMPORALMENTE: import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme, isDark } = useApp();
-  const { usuario, Logout } = useAuth();
+  // COMENTADO TEMPORALMENTE: const { usuario, Logout } = useAuth();
   const location = useLocation();
   const menuItems = [
     {
@@ -131,13 +131,12 @@ const MainLayout = () => {
                   <User className="text-white" size={18} />
                 </div>
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-theme-background" />
-              </div>
-              <div>
+              </div>              <div>
                 <p className="font-medium text-theme-text text-sm">
-                  {usuario?.nombre || 'Usuario'}
+                  {/* TEMPORAL: usuario?.nombre || */ 'Usuario Demo'}
                 </p>
                 <p className="text-xs text-theme-text-secondary">
-                  {usuario?.rol || 'Supervisor'}
+                  {/* TEMPORAL: usuario?.rol || */ 'Supervisor'}
                 </p>
               </div>
             </div>
@@ -146,9 +145,9 @@ const MainLayout = () => {
               <button className="flex items-center space-x-2 w-full p-3 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-xl transition-colors">
                 <Settings size={16} />
                 <span className="text-sm">Configuración</span>
-              </button>
-              <button 
-                onClick={Logout}
+              </button>              <button 
+                // COMENTADO TEMPORALMENTE: onClick={Logout}
+                onClick={() => alert('Logout deshabilitado para demo')}
                 className="flex items-center space-x-2 w-full p-3 text-theme-text-secondary hover:text-error hover:bg-error-light rounded-xl transition-colors"
               >
                 <LogOut size={16} />
