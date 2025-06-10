@@ -3,7 +3,7 @@
 import { createContext, useContext } from "react";
 import { useState } from "react";
 import api from "../api/api";
-
+import { toast } from "sonner";
 // Crear el contexto de autenticacion
 const AuthContext = createContext();
 
@@ -39,6 +39,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("usuario", JSON.stringify(usuario))
       localStorage.setItem("isAuthenticated", true);
 
+      // Toast
+      toast.success("Login exitoso");
+
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -52,10 +55,13 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       localStorage.removeItem("token");
-      localStorage.removeItem("Usuario");
+      localStorage.removeItem("usuario");
       localStorage.removeItem("isAuthenticated");
       setUsuario(null);
       setIsAuthenticated(false);
+
+      // Toast
+      toast.success("Logout exitoso");
     } catch (error) {
       console.error(error);
     }

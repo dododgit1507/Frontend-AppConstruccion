@@ -17,10 +17,12 @@ import {
   Moon
 } from 'lucide-react';
 import { useApp } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme, isDark } = useApp();
   const location = useLocation();
+  const { Logout } = useAuth();
 
   const menuItems = [
     {
@@ -142,7 +144,10 @@ const MainLayout = () => {
                 <Settings size={16} />
                 <span className="text-sm">Configuración</span>
               </button>
-              <button className="flex items-center space-x-2 w-full p-3 text-theme-text-secondary hover:text-error hover:bg-error-light rounded-xl transition-colors">
+              <button 
+                onClick={Logout}
+                className="flex items-center space-x-2 w-full p-3 text-theme-text-secondary hover:text-error hover:bg-error-light rounded-xl transition-colors"
+              >
                 <LogOut size={16} />
                 <span className="text-sm">Cerrar Sesión</span>
               </button>
