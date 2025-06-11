@@ -10,14 +10,12 @@ import Excavacion from './pages/excavacion/Excavacion';
 import Acabados from './pages/acabados/Acabados';
 
 export const router = createBrowserRouter([
-  // TEMPORAL: Ruta raíz - redirige directamente a dashboard (sin login)
+  // Ruta raíz - redirige a login
   {
     path: '/',
-    element: <Navigate to="/dashboard" replace />
+    element: <Navigate to="/login" replace />
   },
-  
-  // COMENTADO TEMPORALMENTE: Rutas de autenticación 
-  /*
+  // Rutas de autenticación (públicas)
   {
     path: '/login',
     element: <AuthLayout />,
@@ -28,12 +26,14 @@ export const router = createBrowserRouter([
       }
     ]
   },
-  */
-  
-  // TEMPORAL: Rutas sin protección (para demo sin backend)
+  // Rutas protegidas (requieren autenticación)
   {
     path: '/dashboard',
-    element: <MainLayout />, // Sin ProtectedRoute temporalmente
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -57,18 +57,9 @@ export const router = createBrowserRouter([
       }
     ]
   },
-  
-  // COMENTADO TEMPORALMENTE: Ruta catch-all
-  /*
+  // Ruta catch-all para manejar rutas no encontradas
   {
     path: '*',
     element: <Navigate to="/login" replace />
-  }
-  */
-  
-  // TEMPORAL: Ruta catch-all redirige a dashboard
-  {
-    path: '*',
-    element: <Navigate to="/dashboard" replace />
   }
 ]);

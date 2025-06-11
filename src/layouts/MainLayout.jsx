@@ -17,11 +17,11 @@ import {
   Moon
 } from 'lucide-react';
 import { useApp } from '../context/ThemeContext';
-// COMENTADO TEMPORALMENTE: import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme, isDark } = useApp();
-  // COMENTADO TEMPORALMENTE: const { usuario, Logout } = useAuth();
+  const { usuario, Logout } = useAuth();
   const location = useLocation();
   const menuItems = [
     {
@@ -133,10 +133,10 @@ const MainLayout = () => {
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-theme-background" />
               </div>              <div>
                 <p className="font-medium text-theme-text text-sm">
-                  {/* TEMPORAL: usuario?.nombre || */ 'Usuario Demo'}
+                  {usuario?.nombre || 'Usuario'}
                 </p>
                 <p className="text-xs text-theme-text-secondary">
-                  {/* TEMPORAL: usuario?.rol || */ 'Supervisor'}
+                  {usuario?.rol || 'Supervisor'}
                 </p>
               </div>
             </div>
@@ -146,8 +146,7 @@ const MainLayout = () => {
                 <Settings size={16} />
                 <span className="text-sm">Configuración</span>
               </button>              <button 
-                // COMENTADO TEMPORALMENTE: onClick={Logout}
-                onClick={() => alert('Logout deshabilitado para demo')}
+                onClick={Logout}
                 className="flex items-center space-x-2 w-full p-3 text-theme-text-secondary hover:text-error hover:bg-error-light rounded-xl transition-colors"
               >
                 <LogOut size={16} />
