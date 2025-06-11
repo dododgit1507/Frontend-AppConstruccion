@@ -6,9 +6,9 @@
 
 :root {
   /* Colores Primarios de BuildApp */
-  --color-primary: 16 185 129; /* emerald-600 (verde esmeralda) */
-  --color-primary-light: 52 211 153; /* emerald-400 */
-  --color-primary-dark: 5 150 105; /* emerald-700 */
+  --color-primary: 184 135 2;        /* #B88702 - amarillo mostaza (principal) */
+  --color-primary-light: 255 204 0;  /* #FFCC00 - amarillo claro/dorado */
+  --color-primary-dark: 140 100 0;
     
   /* Colores de Estado */
   --color-success: 34 197 94; /* green-500 */
@@ -153,6 +153,53 @@
 /* Transiciones suaves */
 * {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Transiciones específicas para sidebar móvil */
+.sidebar-transition {
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.overlay-transition {
+  transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1), 
+              visibility 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              backdrop-filter 0.3s ease;
+}
+
+/* Transiciones para elementos del sidebar */
+.sidebar-item {
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sidebar-item:hover {
+  transform: translateX(6px);
+}
+
+/* Transición suave para el botón del menú hamburguesa */
+.menu-button {
+  transition: transform 0.15s cubic-bezier(0.23, 1, 0.32, 1), 
+              background-color 0.2s ease,
+              color 0.2s ease;
+}
+
+.menu-button:active {
+  transform: scale(0.92);
+}
+
+/* Efecto de entrada escalonada para elementos del sidebar */
+.sidebar-content {
+  animation: fadeInUp 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Configuración base */

@@ -21,8 +21,6 @@ import {
   ChevronRight,
   Settings
 } from 'lucide-react';
-import CreateProjectModal from './modals/CreateProjectModal';
-import { toast } from 'sonner';
 
 const ExcavacionSystem = () => {
   const { theme } = useApp();
@@ -30,8 +28,9 @@ const ExcavacionSystem = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedExcavacion, setSelectedExcavacion] = useState(null);
   const [selectedAnillo, setSelectedAnillo] = useState(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [proyectosExcavacion, setProyectosExcavacion] = useState([
+
+  // Datos de proyectos de excavación
+  const proyectosExcavacion = [
     {
       id: 'proyecto-1',
       nombre: 'Torre Residencial Norte',
@@ -108,36 +107,9 @@ const ExcavacionSystem = () => {
           estado: 'planificado',
           anillos: 6
         }
-      ]    }
-  ]);
-  // Función para crear un nuevo proyecto
-  const handleCreateProject = (newProjectData) => {
-    try {
-      const newProject = {
-        id: `proyecto-${Date.now()}`,
-        nombre: newProjectData.nombre,
-        ubicacion: newProjectData.ubicacion,
-        estado: 'planificado',
-        fechaInicio: newProjectData.fechaInicio,
-        fechaEstimada: newProjectData.fechaEstimada,
-        supervisor: newProjectData.supervisor,
-        profundidadTotal: newProjectData.profundidadTotal,
-        areaTotal: newProjectData.areaTotal,
-        progreso: 0,
-        excavaciones: []
-      };
-
-      setProyectosExcavacion(prev => [...prev, newProject]);
-      toast.success('¡Proyecto creado exitosamente!', {
-        description: `El proyecto "${newProjectData.nombre}" ha sido creado correctamente.`,
-      });
-      setIsCreateModalOpen(false);
-    } catch (error) {
-      toast.error('Error al crear el proyecto', {
-        description: 'Hubo un problema al crear el proyecto. Por favor, inténtalo de nuevo.',
-      });
+      ]
     }
-  };
+  ];
 
   // Datos detallados de anillos por excavación
   const getAnillosData = (excavacionId) => {
@@ -548,10 +520,8 @@ const ExcavacionSystem = () => {
                 Gestión completa de excavaciones por proyecto
               </p>
             </div>
-          </div>          <button 
-            onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-          >
+          </div>
+          <button className="flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
             <Plus size={16} />
             <span>Nuevo Proyecto</span>
           </button>
@@ -674,15 +644,9 @@ const ExcavacionSystem = () => {
                 </div>
               </div>
             </div>
-          </div>        ))}
+          </div>
+        ))}
       </div>
-
-      {/* Modal de Creación de Proyecto */}
-      <CreateProjectModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreateProject={handleCreateProject}
-      />
     </div>
   );
 };

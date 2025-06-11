@@ -54,24 +54,26 @@ const MainLayout = () => {
       path: '/dashboard/acabados',
       active: location.pathname === '/dashboard/acabados'
     }
-  ];
-  return (
-    <div className="flex h-screen bg-theme-background">      {/* Overlay para móvil */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-overlay backdrop-blur-sm z-40 lg:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
-
-      {/* Sidebar optimizado */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-80 transform transition-all duration-300 ease-in-out ${
+  ];  return (
+    <div className="flex h-screen bg-theme-background">      {/* Overlay para móvil con transición */}
+      <div 
+        className={`fixed inset-0 bg-overlay backdrop-blur-sm z-40 lg:hidden overlay-transition ${
+          sidebarOpen 
+            ? 'opacity-100 visible' 
+            : 'opacity-0 invisible'
+        }`}
+        onClick={toggleSidebar}
+      />{/* Sidebar optimizado con transiciones mejoradas */}
+      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-80 transform sidebar-transition ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
-        
-        <div className="h-full bg-surface backdrop-blur-xl border-r border-theme-border shadow-2xl">
+          <div className="h-full bg-surface backdrop-blur-xl border-r border-theme-border shadow-2xl sidebar-content"
+             style={{
+               transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
+             }}>
             {/* Header del Sidebar */}
-          <div className="p-6 border-b border-theme-border">
+          <div className="p-6 border-b border-theme-border"
+               style={{ transition: 'border-color 0.3s ease' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg">
@@ -89,10 +91,9 @@ const MainLayout = () => {
                   title={`Cambiar a tema ${isDark ? 'claro' : 'oscuro'}`}
                 >
                   {isDark ? <Sun size={18} /> : <Moon size={18} />}
-                </button>
-                <button 
+                </button>                <button 
                   onClick={toggleSidebar}
-                  className="lg:hidden text-theme-text-secondary hover:text-theme-text p-2 rounded-lg hover:bg-surface-hover"
+                  className="lg:hidden text-theme-text-secondary hover:text-theme-text p-2 rounded-lg hover:bg-surface-hover menu-button"
                 >
                   <X size={20} />
                 </button>
@@ -107,7 +108,7 @@ const MainLayout = () => {
                 <li key={item.path}>                  <Link
                     to={item.path}
                     onClick={() => toggleSidebar()}
-                    className={`flex items-center space-x-3 p-4 rounded-2xl transition-all duration-200 group ${
+                    className={`flex items-center space-x-3 p-4 rounded-2xl sidebar-item ${
                       item.active
                         ? 'bg-primary text-white shadow-xl'
                         : 'text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover'
@@ -161,10 +162,9 @@ const MainLayout = () => {
       <div className="flex-1 flex flex-col overflow-hidden">        {/* Header optimizado */}
         <header className="bg-surface backdrop-blur-xl border-b border-theme-border px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button 
+            <div className="flex items-center space-x-4">              <button 
                 onClick={toggleSidebar}
-                className="lg:hidden p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg"
+                className="lg:hidden p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg menu-button"
               >
                 <Menu size={24} />
               </button>

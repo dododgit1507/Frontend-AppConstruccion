@@ -10,8 +10,7 @@ import './index.css'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AppProvider>
-      <AuthProvider>
-        <RouterProvider router={router} />
+      <AuthProvider>        <RouterProvider router={router} />
 
         <Toaster 
           richColors

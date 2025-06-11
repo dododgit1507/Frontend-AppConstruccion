@@ -55,8 +55,7 @@ const Dashboard = () => {
           <div>
             <h1 className="text-2xl font-bold text-theme-text mb-2">Panel de Control - BuildApp</h1>
             <p className="text-theme-text-secondary">Supervisión integral de proyectos de construcción</p>
-          </div>
-          <div className="hidden md:block w-16 h-16 bg-primary rounded-xl flex items-center justify-center">
+          </div>          <div className="hidden md:flex w-16 h-16 bg-primary rounded-xl items-center justify-center">
             <Building className="text-white" size={32} />
           </div>
         </div>
