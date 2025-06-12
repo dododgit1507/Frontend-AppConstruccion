@@ -1,5 +1,5 @@
-import ExcavacionModules from '@/components/ExcavacionModules';
 import { useState } from 'react';
+import ExcavacionModules from '@/components/ExcavacionModules';
 import RegistrarProyecto from '@/components/excavacion/modales/RegistrarProyecto';
 import RegistrarExcavacion from '@/components/excavacion/modales/registrarExcavacion';
 
@@ -8,9 +8,9 @@ const Excavacion = () => {
 
   return (
     <div className="p-6">
-      <ExcavacionModules />
+      {/* <ExcavacionModules /> */}
 
-      {/* <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between">
         <div>
           <h1>Proyectos de Excavacion</h1>
         </div>
@@ -19,7 +19,9 @@ const Excavacion = () => {
         </div>
       </div>
 
-      {openModal && <RegistrarExcavacion onClose={() => setOpenModal(false)} />} */}
+      {/* Cards de Proyectos */}
+
+      {openModal && <RegistrarExcavacion onClose={() => setOpenModal(false)} />}
     </div>
   )
 };

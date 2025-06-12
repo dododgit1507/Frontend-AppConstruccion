@@ -1,18 +1,20 @@
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { X } from "lucide-react";
-
+import { X, Save } from "lucide-react";
 // Componentes de UI
 import ModalContainer from "@/components/ui/modalContainer";
+import Modal from "@/components/ui/Modal";
 import Separador from "@/components/ui/Separador";
 import FormTitle from "@/components/ui/FormTitle";
 import FormSubtitle from "@/components/ui/FormSubtitle";
 import FormDivisor from "@/components/ui/FormDivisor";
+import FormGroup from "@/components/ui/FormGroup";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 // Servicio de Proyecto
 import proyectoService from "@/services/proyectoService";
 
-const RegistrarProyecto = () => {
+const RegistrarProyecto = ({ onClose }) => {
 
   const { register, handleSubmit, formState: { errors }, formState: { isSubmitting } } = useForm();
 
@@ -20,6 +22,7 @@ const RegistrarProyecto = () => {
     try {
       await proyectoService.create(data);
       toast.success("Proyecto creado exitosamente");
+      onClose();
     } catch (error) {
       console.error(error);
       toast.error("Error al crear el proyecto");
@@ -28,8 +31,8 @@ const RegistrarProyecto = () => {
 
   return (
     <ModalContainer>
-      <div className="flex flex-col gap-4 p-8 w-[700px] h-auto max-h-[700px] overflow-y-auto border border-slate-200 rounded-lg">
-        <FormTitle>Registrar Excavacion <X onClick={onClose} className="cursor-pointer" /></FormTitle>
+      <Modal>
+        <FormTitle>Registrar Proyecto <X onClick={onClose} className="cursor-pointer" /></FormTitle>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Separador />
           <FormDivisor>
@@ -39,29 +42,31 @@ const RegistrarProyecto = () => {
             </div>
             {/* Contenido */}
             <div className="flex-1/2 space-y-2">
-              <div className="flex flex-col gap-2">
+              <FormGroup>
                 <label htmlFor="nombre">Nombre</label>
                 <input className="border border-slate-200 rounded-lg p-2" type="text" id="nombre" {...register("nombre", { required: "El nombre es obligatorio" })} />
-                {errors.nombre && <p>{errors.nombre.message}</p>}
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="profundidad">Profundidad</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
-                {errors.profundidad && <p>{errors.profundidad.message}</p>}
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="volumen">Volumen</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="volumen" {...register("volumen", { required: "El volumen es obligatorio" })} />
-                {errors.volumen && <p>{errors.volumen.message}</p>}
-              </div>
+                {errors.nombre && <ErrorMessage>{errors.nombre.message}</ErrorMessage>}
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="razon_social">Razon Social</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="text" id="razon_social" {...register("razon_social", { required: "La razon social es obligatoria" })} />
+                {errors.razon_social && <ErrorMessage>{errors.razon_social.message}</ErrorMessage>}
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="direccion">Dirección</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="text" id="direccion" {...register("direccion", { required: "La direccion es obligatoria" })} />
+                {errors.direccion && <ErrorMessage>{errors.direccion.message}</ErrorMessage>}
+              </FormGroup>
             </div>
           </FormDivisor>
           <FormDivisor>
+            { /* Subtitulo */}
             <div className="flex-1/2">
               <FormSubtitle>Estado del Proyecto</FormSubtitle>
             </div>
+            { /* Contenido */}
             <div className="flex-1/2 space-y-2">
-              <div className="flex flex-col gap-2">
+              <FormGroup>
                 <label htmlFor="estado">Estado</label>
                 <select className="border border-slate-200 rounded-lg p-2" name="estado" id="estado" {...register("estado", { required: "El estado es obligatorio" })}>
                   <option value="">Seleccione un estado</option>
@@ -69,42 +74,58 @@ const RegistrarProyecto = () => {
                   <option value="iniciada">Iniciada</option>
                   <option value="finalizada">Finalizada</option>
                 </select>
-                {errors.estado && <p>{errors.estado.message}</p>}
-              </div>
+                {errors.estado && <ErrorMessage>{errors.estado.message}</ErrorMessage>}
+              </FormGroup>
             </div>
           </FormDivisor>
+
           <FormDivisor>
+            { /* Subtitulo */}
             <div className="flex-1/2">
-              <FormSubtitle>Fechas</FormSubtitle>
+              <FormSubtitle>Metrado del Proyecto</FormSubtitle>
             </div>
             <div className="flex-1/2 space-y-2">
-              <div className="flex flex-col gap-2">
-                <label htmlFor="fecha_inicio">Fecha de Inicio</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="date" id="fecha_inicio" {...register("fecha_inicio", { required: "La fecha de inicio es obligatoria" })} />
-                {errors.fecha_inicio && <p>{errors.fecha_inicio.message}</p>}
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="fecha_fin">Fecha de Fin</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="date" id="fecha_fin" {...register("fecha_fin", { required: "La fecha de fin es obligatoria" })} />
-                {errors.fecha_fin && <p>{errors.fecha_fin.message}</p>}
-              </div>
+              <FormGroup>
+                <label htmlFor="profundidad">Profundidad (m)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
+                {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="area">Área (m²)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El area es obligatoria" })} />
+                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+              </FormGroup>
             </div>
           </FormDivisor>
-          {/* <div>
-                <label htmlFor="id_proyecto">Proyecto</label>
-                <input type="text" id="id_proyecto" {...register("id_proyecto")} />
-              </div> */}
+
+          <FormDivisor>
+            <div className="flex-1/2">
+              <FormSubtitle>Responsables</FormSubtitle>
+            </div>
+            <div className="flex-1/2 space-y-2">
+              <FormGroup>
+                <label htmlFor="responsable">Responsable</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="text" id="responsable" {...register("responsable", { required: "El responsable es obligatorio" })} />
+                {errors.responsable && <ErrorMessage>{errors.responsable.message}</ErrorMessage>}
+              </FormGroup>
+              <FormGroup>
+                <label htmlFor="residente">Residente</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="text" id="residente" {...register("residente", { required: "El residente es obligatorio" })} />
+                {errors.residente && <ErrorMessage>{errors.residente.message}</ErrorMessage>}
+              </FormGroup>
+            </div>
+          </FormDivisor>
           <div className="flex flex-row justify-end gap-4">
-            <button type="button" className="bg-slate-100 text-slate-500 py-2 px-4 rounded-lg"
+            <button type="button" className="bg-slate-100 text-slate-500 py-3 px-6 rounded-lg"
               onClick={onClose}>
               Cancelar
             </button>
-            <button type="submit" disabled={isSubmitting} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
-              {isSubmitting ? <span className="animate-spin">Registrando...</span> : "Registrar"}
+            <button type="submit" disabled={isSubmitting} className="bg-blue-500 text-white py-3 px-6 rounded-lg">
+              <span className="flex items-center gap-2"><Save />{isSubmitting ? "Registrando..." : "Registrar"}</span>
             </button>
           </div>
         </form>
-      </div>
+      </Modal>
     </ModalContainer>
   )
 }
