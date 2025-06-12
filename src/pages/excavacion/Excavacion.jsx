@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import RegistrarExcavacion from '@/components/excavacion/modales/registrarExcavacion';
+import RegistrarExcavacion from '@/components/excavacion/modales/RegistrarExcavacion';
 import excavacionService from '@/services/excavacion/excavacionService';
 import { ArrowLeft, Plus, Shovel } from 'lucide-react';
 import { toast } from 'sonner';
