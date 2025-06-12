@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { X, Save } from "lucide-react";
 // Componentes de UI
-import ModalContainer from "@/components/ui/modalContainer";
+import ModalContainer from "@/components/ui/ModalContainer";
 import Modal from "@/components/ui/Modal";
 import Separador from "@/components/ui/Separador";
 import FormTitle from "@/components/ui/FormTitle";
