@@ -1,6 +1,12 @@
 import api from "@/api/api";
 
 const panelService = {
+
+  getById: async (id) => {
+    const response = await api.get(`/excavacion/panel/${id}`);
+    return response.data;
+  },
+
   getAll: async () => {
     const response = await api.get("/excavacion/panel");
     return response.data;

@@ -6,7 +6,7 @@ import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/dashboard/Dashboard';
 import Demolicion from './pages/demolicion/Demolicion';
 import Construccion from './pages/construccion/Construccion';
-import Excavacion from './pages/excavacion/Excavacion';
+import ExcavacionPage from './pages/excavacion/ExcavacionPage';
 import Acabados from './pages/acabados/Acabados';
 
 export const router = createBrowserRouter([
@@ -49,7 +49,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'excavacion',
-        element: <Excavacion />
+        element: <ExcavacionPage />
       },
       {
         path: 'acabados',

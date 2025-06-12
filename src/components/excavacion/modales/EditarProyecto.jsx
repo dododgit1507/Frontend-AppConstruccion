@@ -14,26 +14,37 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 // Servicio de Proyecto
 import proyectoService from "@/services/proyectoService";
 
-const RegistrarProyecto = ({ onClose }) => {
+const EditarProyecto = ({ onClose, proyecto }) => {
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: {
+      nombre: proyecto.nombre,
+      razon_social: proyecto.razon_social,
+      direccion: proyecto.direccion,
+      estado: proyecto.estado,
+      profundidad: proyecto.profundidad,
+      area: proyecto.area,
+      responsable: proyecto.responsable,
+      residente: proyecto.residente
+    }
+  });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (id, data) => {
     try {
-      await proyectoService.create(data);
-      toast.success("Proyecto creado exitosamente");
+      await proyectoService.update(id, data);
+      toast.success("Proyecto editado exitosamente");
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Error al crear el proyecto");
+      toast.error("Error al editar el proyecto");
     }
   }
 
   return (
     <ModalContainer>
       <Modal>
-        <FormTitle>Registrar Proyecto <X onClick={onClose} className="cursor-pointer" /></FormTitle>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <FormTitle>Editar Proyecto <X onClick={onClose} className="cursor-pointer" /></FormTitle>
+        <form onSubmit={handleSubmit((data) => onSubmit(proyecto.id_proyecto, data))} className="space-y-4">
           <Separador />
           <FormDivisor>
             {/* Titulo */}
@@ -130,4 +141,4 @@ const RegistrarProyecto = ({ onClose }) => {
   )
 }
 
-export default RegistrarProyecto;
+export default EditarProyecto;

@@ -11,32 +11,32 @@ import FormDivisor from "@/components/ui/FormDivisor";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import FormGroup from "@/components/ui/FormGroup";
 
-// Servicio de Excavacion
-import excavacionService from "@/services/excavacion/excavacionService";
+// Servicio de Sector
+import sectorService from "@/sercices/excavacion/sectorService";
 
-const RegistrarExcavacion = ({ proyectoId, onClose }) => {
+const RegistrarSector = ({ anilloId, onClose }) => {
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
   const onSubmit = async (data) => {
     try {
-      await excavacionService.create({ ...data, id_proyecto: proyectoId });
-      toast.success("Excavacion creada exitosamente");
+      await sectorService.create({ ...data, id_anillo: anilloId })
+      toast.success("Sector registrado exitosamente")
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Error al crear la excavacion");
+      toast.error("Error al crear el sector");
     }
   }
 
   return (
     <ModalContainer>
       <Modal>
-        <FormTitle>Registrar Excavacion <X onClick={onClose} className="cursor-pointer" /></FormTitle>
+        <FormTitle>Registrar Sector <X onClick={onClose} className="cursor-pointer" /></FormTitle>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Separador />
           <FormDivisor>
-            {/* Titulo */}
+            {/* Subtitulo */}
             <div className="flex-1/2">
               <FormSubtitle>Información General</FormSubtitle>
             </div>
@@ -48,26 +48,27 @@ const RegistrarExcavacion = ({ proyectoId, onClose }) => {
                 {errors.nombre && <ErrorMessage>{errors.nombre.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="profundidad">Profundidad (m)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
-                {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
+                <label htmlFor="area">Área</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El área es obligatorio" })} />
+                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Area (m2)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El area es obligatoria" })} />
+                <label htmlFor="area">Profundidad</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profunidad es obligatorio" })} />
                 {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
               </FormGroup>
             </div>
           </FormDivisor>
           <FormDivisor>
+            {/* Subtitulo */}
             <div className="flex-1/2">
-              <FormSubtitle>Estado de la Excavacion</FormSubtitle>
+              <FormSubtitle>Estado del Sector</FormSubtitle>
             </div>
+            {/* Contenido */}
             <div className="flex-1/2 space-y-2">
               <FormGroup>
                 <label htmlFor="estado">Estado</label>
                 <select className="border border-slate-200 rounded-lg p-2" name="estado" id="estado" {...register("estado", { required: "El estado es obligatorio" })}>
-                  <option value="">Seleccione un estado</option>
                   <option value="pendiente">Pendiente</option>
                   <option value="iniciada">Iniciada</option>
                   <option value="finalizada">Finalizada</option>
@@ -76,18 +77,8 @@ const RegistrarExcavacion = ({ proyectoId, onClose }) => {
               </FormGroup>
             </div>
           </FormDivisor>
-          <FormDivisor>
-            <div className="flex-1/2">
-              <FormSubtitle>Fechas</FormSubtitle>
-            </div>
-            <div className="flex-1/2 space-y-2">
-              <FormGroup>
-                <label htmlFor="fecha_inicio">Fecha de Inicio</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="date" id="fecha_inicio" {...register("fecha_inicio", { required: "La fecha de inicio es obligatoria" })} />
-                {errors.fecha_inicio && <ErrorMessage>{errors.fecha_inicio.message}</ErrorMessage>}
-              </FormGroup>
-            </div>
-          </FormDivisor>
+
+          {/* Botones - Cancelar y Registrar*/}
           <div className="flex flex-row justify-end gap-4">
             <button type="button" className="bg-slate-100 text-slate-500 py-3 px-6 rounded-lg"
               onClick={onClose}>
@@ -101,7 +92,6 @@ const RegistrarExcavacion = ({ proyectoId, onClose }) => {
       </Modal>
     </ModalContainer>
   )
-
 }
 
-export default RegistrarExcavacion
+export default RegistrarSector;
