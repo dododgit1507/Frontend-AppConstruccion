@@ -1,7 +1,13 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api/api";
+
+
+// Clave para la caché de excavaciones
+export const EXCAVACION_QUERY_KEY = ["excavacion"];
 
 const excavacionService = {
 
+  // Funciones de Servicio
   getById: async (id) => {
     const response = await api.get(`/excavacion/${id}`);
     return response.data;
@@ -37,6 +43,44 @@ const excavacionService = {
     
     const excavacionesFinalizadas = excavaciones.filter(exc => exc.estado === 'finalizada').length;
     return Math.round((excavacionesFinalizadas / excavaciones.length) * 100);
+  },
+
+  // Hooks de React Query
+  useExcavacionQuery: () => {
+    return useQuery({
+      queryKey: EXCAVACION_QUERY_KEY,
+      queryFn: excavacionService.getAll,
+    });
+  },
+
+  useExcavacionByProyectoQuery: (proyectoId) => {
+    return useQuery({
+      queryKey: [...EXCAVACION_QUERY_KEY, 'proyecto', proyectoId],
+      queryFn: () => excavacionService.getByProyectoId(proyectoId),
+      enabled: !!proyectoId, // Solo ejecuta la consulta si hay un ID de proyecto
+    });
+  },
+
+  useExcavacionCreateMutation: () => {
+    const queryClient = useQueryClient();
+    
+    return useMutation({
+      mutationFn: excavacionService.create,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: EXCAVACION_QUERY_KEY })
+      }
+    });
+  },
+
+  useExcavacionUpdateMutation: () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+      mutationFn: (id, data) => excavacionService.update(id, data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: EXCAVACION_QUERY_KEY })
+      }
+    });
   },
 }
 

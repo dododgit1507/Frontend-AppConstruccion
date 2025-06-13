@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import RegistrarExcavacion from '@/components/excavacion/modales/RegistrarExcavacion';
 import excavacionService from '@/services/excavacion/excavacionService';
 import { ArrowLeft, Plus, Shovel } from 'lucide-react';
@@ -9,29 +9,18 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
   // Estado para modal
   const [openExcavacionModal, setOpenExcavacionModal] = useState(false);
 
-  // Estados para datos
-  const [excavaciones, setExcavaciones] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Usar React Query para obtener las excavaciones del proyecto
+  const { 
+    data: excavaciones = [], 
+    isLoading: loading,
+    error
+  } = excavacionService.useExcavacionByProyectoQuery(proyecto?.id_proyecto);
 
-  // Cargar excavaciones del proyecto al montar el componente
-  useEffect(() => {
-    const fetchExcavaciones = async () => {
-      if (!proyecto?.id_proyecto) return;
-
-      try {
-        setLoading(true);
-        const data = await excavacionService.getByProyectoId(proyecto.id_proyecto);
-        setExcavaciones(data);
-      } catch (error) {
-        console.error('Error al cargar excavaciones:', error);
-        toast.error('Error al cargar las excavaciones');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExcavaciones();
-  }, [proyecto?.id_proyecto, openExcavacionModal]); // Recargar cuando se cierre el modal o cambie el proyecto
+  // Mostrar error si ocurre
+  if (error) {
+    console.error('Error al cargar excavaciones:', error);
+    toast.error('Error al cargar las excavaciones');
+  }
 
   const handleExcavacionClick = (excavacion) => {
     if (onSelectExcavacion) {
@@ -140,6 +129,8 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
         <RegistrarExcavacion
           proyectoId={proyecto?.id_proyecto}
           onClose={() => setOpenExcavacionModal(false)}
+          // Ya no necesitamos recargar manualmente los datos
+          // React Query se encargará de invalidar la caché y actualizar los datos
         />
       )}
     </div>

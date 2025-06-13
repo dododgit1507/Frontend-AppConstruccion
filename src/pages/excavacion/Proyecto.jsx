@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ExcavacionCard from '@/components/excavacion/cards/ExcavacionCard';
 import RegistrarProyecto from '@/components/excavacion/modales/RegistrarProyecto';
 import proyectoService from '@/services/proyectoService';
-import excavacionService from '@/services/excavacion/excavacionService';
 import { Building, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -10,68 +9,29 @@ const Proyecto = ({ onSelectProyecto }) => {
   // Estado para modal
   const [openProyectoModal, setOpenProyectoModal] = useState(false);
   
-  // Estados para datos
-  const [proyectos, setProyectos] = useState([]);
-  const [proyectosConProgreso, setProyectosConProgreso] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Cargar proyectos al montar el componente
-  useEffect(() => {
-    const fetchProyectos = async () => {
-      try {
-        setLoading(true);
-        const data = await proyectoService.getAll();
-        setProyectos(data);
-        
-        // Obtener las excavaciones para cada proyecto y calcular el progreso
-        await calcularProgresoProyectos(data);
-      } catch (error) {
-        console.error('Error al cargar proyectos:', error);
-        toast.error('Error al cargar los proyectos');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProyectos();
-  }, [openProyectoModal]); // Recargar cuando se cierre el modal
+  // Usar React Query para obtener los proyectos con progreso
+  const {
+    data: proyectosConProgreso = [],
+    isLoading: loadingProyectosConProgreso,
+    error: errorProyectosConProgreso
+  } = proyectoService.useProyectosConProgresoQuery();
   
-  // Función para obtener las excavaciones de cada proyecto y calcular su progreso
-  const calcularProgresoProyectos = async (proyectos) => {
-    try {
-      const proyectosActualizados = [];
-      
-      for (const proyecto of proyectos) {
-        try {
-          // Obtener las excavaciones del proyecto
-          const excavaciones = await excavacionService.getByProyectoId(proyecto.id_proyecto);
-          
-          // Calcular el progreso basado en las excavaciones
-          const progreso = excavacionService.calcularProgresoProyecto(excavaciones);
-          
-          // Añadir el progreso y las excavaciones al proyecto
-          proyectosActualizados.push({
-            ...proyecto,
-            progreso,
-            excavaciones
-          });
-        } catch (error) {
-          console.error(`Error al obtener excavaciones para el proyecto ${proyecto.id_proyecto}:`, error);
-          // Si hay error, añadir el proyecto sin progreso calculado
-          proyectosActualizados.push({
-            ...proyecto,
-            progreso: 0,
-            excavaciones: []
-          });
-        }
-      }
-      
-      setProyectosConProgreso(proyectosActualizados);
-    } catch (error) {
-      console.error('Error al calcular el progreso de los proyectos:', error);
-      toast.error('Error al calcular el progreso de los proyectos');
-    }
-  };
+  // Usar React Query para obtener todos los proyectos (para estadísticas)
+  const {
+    data: proyectos = [],
+    isLoading: loadingProyectos,
+    error: errorProyectos
+  } = proyectoService.useProyectoQuery();
+  
+  // Determinar si hay algún error o si está cargando
+  const loading = loadingProyectos || loadingProyectosConProgreso;
+  const error = errorProyectos || errorProyectosConProgreso;
+  
+  // Mostrar error si ocurre
+  if (error) {
+    console.error('Error al cargar proyectos:', error);
+    toast.error('Error al cargar los proyectos');
+  }
 
   const handleProyectoClick = (proyecto) => {
     if (onSelectProyecto) {
@@ -189,7 +149,13 @@ const Proyecto = ({ onSelectProyecto }) => {
       )}
 
       {/* Modal */}
-      {openProyectoModal && <RegistrarProyecto onClose={() => setOpenProyectoModal(false)} />}
+      {openProyectoModal && (
+        <RegistrarProyecto 
+          onClose={() => setOpenProyectoModal(false)}
+          // Ya no necesitamos recargar manualmente los datos
+          // React Query se encargará de invalidar la caché y actualizar los datos
+        />
+      )}
     </div>
   );
 };

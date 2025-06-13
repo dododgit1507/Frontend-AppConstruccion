@@ -16,17 +16,26 @@ import excavacionService from "@/services/excavacion/excavacionService";
 
 const RegistrarExcavacion = ({ proyectoId, onClose }) => {
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = async (data) => {
-    try {
-      await excavacionService.create({ ...data, id_proyecto: proyectoId });
-      toast.success("Excavacion creada exitosamente");
-      onClose();
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al crear la excavacion");
-    }
+  // Usar el hook de mutación para crear excavaciones
+  const { mutate, isPending: isSubmitting } = excavacionService.useExcavacionCreateMutation();
+
+  const onSubmit = (data) => {
+    // Usar la mutación en lugar de llamar directamente al servicio
+    mutate(
+      { ...data, id_proyecto: proyectoId },
+      {
+        onSuccess: () => {
+          toast.success("Excavación creada exitosamente");
+          onClose();
+        },
+        onError: (error) => {
+          console.error(error);
+          toast.error("Error al crear la excavación");
+        }
+      }
+    );
   }
 
   return (

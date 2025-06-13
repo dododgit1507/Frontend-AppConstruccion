@@ -24,19 +24,19 @@ api.interceptors.request.use(
   }
 );
 
-// // Interceptor para manejar errores de autenticación
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response?.status === 401) {
-//       // Token expirado o inválido
-//       localStorage.removeItem("token");
-//       localStorage.removeItem("usuario");
-//       localStorage.removeItem("isAuthenticated");
-//       window.location.href = "/login";
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+// Interceptor para manejar errores de autenticación
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expirado o inválido
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("isAuthenticated");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
