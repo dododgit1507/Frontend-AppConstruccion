@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import RegistrarExcavacion from '@/components/excavacion/modales/RegistrarExcavacion';
+import ExcavacionCard from '@/components/excavacion/cards/ExcavacionCard';
 import excavacionService from '@/services/excavacion/excavacionService';
-import { ArrowLeft, Plus, Shovel } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import { toast } from 'sonner';
-import { formatearFechaInversa } from "@/utils/FormatoFecha.js";
 
 const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
   // Estado para modal
   const [openExcavacionModal, setOpenExcavacionModal] = useState(false);
 
-  // Usar React Query para obtener las excavaciones del proyecto
+  // Usar React Query para obtener las excavaciones del proyecto con progreso calculado
   const { 
-    data: excavaciones = [], 
+    data: excavacionesConProgreso = [], 
     isLoading: loading,
     error
-  } = excavacionService.useExcavacionByProyectoQuery(proyecto?.id_proyecto);
+  } = excavacionService.useExcavacionesConProgresoQuery(proyecto?.id_proyecto);
 
   // Mostrar error si ocurre
   if (error) {
@@ -88,7 +88,7 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
         <div className="text-center py-10">
           <p className="text-slate-500">Cargando excavaciones...</p>
         </div>
-      ) : excavaciones.length === 0 ? (
+      ) : excavacionesConProgreso.length === 0 ? (
         <div className="bg-white rounded-xl p-10 border border-slate-200 text-center">
           <p className="text-slate-500 mb-4">No hay excavaciones registradas para este proyecto</p>
           <button
@@ -101,25 +101,12 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {excavaciones.map((excavacion) => (
-            <div
+          {excavacionesConProgreso.map((excavacion) => (
+            <ExcavacionCard
               key={excavacion.id_excavacion}
+              excavacion={excavacion}
               onClick={() => handleExcavacionClick(excavacion)}
-              className="bg-white rounded-xl p-6 border border-slate-200 hover:shadow-md transition-shadow cursor-pointer"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-slate-800">{excavacion.nombre}</h3>
-                <div className="p-2 bg-blue-100 text-blue-500 rounded-lg">
-                  <Shovel size={20} />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm text-slate-500">Profundidad: {excavacion.profundidad}m</p>
-                <p className="text-sm text-slate-500">Área: {excavacion.area}m²</p>
-                <p className="text-sm text-slate-500">Estado: {excavacion.estado}</p>
-                <p className="text-sm text-slate-500">Fecha de inicio: {formatearFechaInversa(excavacion.fecha_inicio)}</p>
-              </div>
-            </div>
+            />
           ))}
         </div>
       )}

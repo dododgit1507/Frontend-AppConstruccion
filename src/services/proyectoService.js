@@ -103,7 +103,7 @@ const proyectoService = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: (id, data) => proyectoService.update(id, data),
+      mutationFn: ({ id, data }) => proyectoService.update(id, data),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: PROYECTO_QUERY_KEY })
       }

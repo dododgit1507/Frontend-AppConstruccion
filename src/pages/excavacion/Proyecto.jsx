@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ExcavacionCard from '@/components/excavacion/cards/ExcavacionCard';
+import ProyectoCard from '@/components/excavacion/cards/ProyectoCard';
 import RegistrarProyecto from '@/components/excavacion/modales/RegistrarProyecto';
 import proyectoService from '@/services/proyectoService';
 import { Building, Plus } from 'lucide-react';
@@ -130,7 +130,7 @@ const Proyecto = ({ onSelectProyecto }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {proyectosConProgreso.length > 0 ? (
             proyectosConProgreso.map((proyecto) => (
-              <ExcavacionCard 
+              <ProyectoCard 
                 key={proyecto.id_proyecto} 
                 proyecto={proyecto} 
                 onClick={() => handleProyectoClick(proyecto)}
@@ -138,7 +138,7 @@ const Proyecto = ({ onSelectProyecto }) => {
             ))
           ) : (
             proyectos.map((proyecto) => (
-              <ExcavacionCard 
+              <ProyectoCard 
                 key={proyecto.id_proyecto} 
                 proyecto={proyecto} 
                 onClick={() => handleProyectoClick(proyecto)}

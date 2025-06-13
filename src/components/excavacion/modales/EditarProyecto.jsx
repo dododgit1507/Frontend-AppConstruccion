@@ -15,8 +15,10 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 import proyectoService from "@/services/proyectoService";
 
 const EditarProyecto = ({ onClose, proyecto }) => {
+  // Usar el hook de mutación de React Query
+  const updateProyectoMutation = proyectoService.useProyectoUpdateMutation();
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty } } = useForm({
     defaultValues: {
       nombre: proyecto.nombre,
       razon_social: proyecto.razon_social,
@@ -31,7 +33,8 @@ const EditarProyecto = ({ onClose, proyecto }) => {
 
   const onSubmit = async (id, data) => {
     try {
-      await proyectoService.update(id, data);
+      // Usar la mutación en lugar de llamar directamente al servicio
+      await updateProyectoMutation.mutateAsync({ id, data });
       toast.success("Proyecto editado exitosamente");
       onClose();
     } catch (error) {
@@ -131,8 +134,8 @@ const EditarProyecto = ({ onClose, proyecto }) => {
               onClick={onClose}>
               Cancelar
             </button>
-            <button type="submit" disabled={isSubmitting} className="bg-blue-500 text-white py-3 px-6 rounded-lg">
-              <span className="flex items-center gap-2"><Save />{isSubmitting ? "Registrando..." : "Registrar"}</span>
+            <button type="submit" disabled={isSubmitting || !isDirty} className={`bg-blue-500 text-white py-3 px-6 rounded-lg ${isSubmitting || !isDirty ? "opacity-50 cursor-not-allowed" : ""}`}>
+              <span className="flex items-center gap-2"><Save />{isSubmitting ? "Guardando..." : "Guardar"}</span>
             </button>
           </div>
         </form>
