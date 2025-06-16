@@ -14,15 +14,19 @@ import {
   Search,
   Zap,
   Sun,
-  Moon
+  Moon,
+  MessageSquare
 } from 'lucide-react';
 import { useApp } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
+import AIChat from '../components/AIChat/AIChat';
 
 const MainLayout = () => {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme, isDark } = useApp();
   const { usuario, Logout } = useAuth();
   const location = useLocation();
+  const [chatOpen, setChatOpen] = useState(false);
   const menuItems = [
     {
       title: 'Panel de Control',
@@ -159,7 +163,7 @@ const MainLayout = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">        {/* Header optimizado */}
+      <div className="flex-1 flex flex-col overflow-hidden relative">        {/* Header optimizado */}
         <header className="bg-surface backdrop-blur-xl border-b border-theme-border px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">              <button 
@@ -198,6 +202,13 @@ const MainLayout = () => {
                 <Bell size={20} />
                 <div className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full" />
               </button>
+              <button 
+                onClick={() => setChatOpen(true)}
+                className="relative p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg"
+                title="Asistente IA"
+              >
+                <MessageSquare size={20} />
+              </button>
             </div>
           </div>
         </header>
@@ -208,6 +219,17 @@ const MainLayout = () => {
                 <Outlet />
             </div>
         </main>
+        
+        {/* Botón flotante para abrir el chat */}
+        <button 
+          onClick={() => setChatOpen(true)}
+          className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center shadow-lg hover:bg-primary-dark transition-all z-30 ${chatOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        >
+          <MessageSquare size={24} />
+        </button>
+        
+        {/* Componente de Chat IA */}
+        <AIChat isOpen={chatOpen} onClose={() => setChatOpen(false)} />
       </div>
     </div>
   );
