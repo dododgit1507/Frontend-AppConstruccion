@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api/api";
 import anilloService from "./anilloService";
+import { PROYECTO_QUERY_KEY } from "@/services/proyectoService";
 
 
 // Clave para la caché de excavaciones
@@ -135,9 +136,10 @@ const excavacionService = {
     const queryClient = useQueryClient();
 
     return useMutation({
-      mutationFn: (id, data) => excavacionService.update(id, data),
+      mutationFn: ({ id, data }) => excavacionService.update(id, data),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: EXCAVACION_QUERY_KEY })
+        queryClient.invalidateQueries({ queryKey: PROYECTO_QUERY_KEY })
       }
     });
   },

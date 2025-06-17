@@ -14,28 +14,38 @@ import FormGroup from "@/components/ui/FormGroup";
 // Servicio de Anillo
 import anilloService from "@/services/excavacion/anilloService";
 
-const RegistrarAnillo = ({ excavacionId, onClose }) => {
-
-  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty } } = useForm();
+const EditarAnillo = ({ anillo, onClose }) => {
+  // Usar React Hook Form con valores por defecto del anillo actual
+  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty } } = useForm({
+    defaultValues: {
+      nombre: anillo.nombre,
+      area: anillo.area,
+      profundidad: anillo.profundidad,
+      estado: anillo.estado
+    }
+  });
   
-  // Usar la mutación de React Query para crear anillos
-  const anilloCreateMutation = anilloService.useAnilloCreateMutation();
+  // Usar la mutación de React Query para actualizar anillos
+  const anilloUpdateMutation = anilloService.useAnilloUpdateMutation();
 
   const onSubmit = async (data) => {
     try {
-      await anilloCreateMutation.mutateAsync({ ...data, id_excavacion: excavacionId })
-      toast.success("Anillo registrado exitosamente")
+      await anilloUpdateMutation.mutateAsync({ 
+        id: anillo.id_anillo, 
+        data: { ...data, id_excavacion: anillo.id_excavacion }
+      });
+      toast.success("Anillo actualizado exitosamente");
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Error al crear el anillo");
+      toast.error("Error al actualizar el anillo");
     }
-  }
+  };
 
   return (
     <ModalContainer>
       <Modal>
-        <FormTitle>Registrar Anillo <X onClick={onClose} className="cursor-pointer" /></FormTitle>
+        <FormTitle>Editar Anillo <X onClick={onClose} className="cursor-pointer" /></FormTitle>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Separador />
           <FormDivisor>
@@ -65,7 +75,7 @@ const RegistrarAnillo = ({ excavacionId, onClose }) => {
           <FormDivisor>
             {/* Subtitulo */}
             <div className="flex-1/2">
-              <FormSubtitle>Estado de la excavación</FormSubtitle>
+              <FormSubtitle>Estado del anillo</FormSubtitle>
             </div>
             {/* Contenido */}
             <div className="flex-1/2 space-y-2">
@@ -81,7 +91,7 @@ const RegistrarAnillo = ({ excavacionId, onClose }) => {
             </div>
           </FormDivisor>
 
-          {/* Botones - Cancelar y Registrar*/}
+          {/* Botones - Cancelar y Guardar */}
           <div className="flex flex-row justify-end gap-4">
             <button type="button" className="bg-slate-100 text-slate-500 py-3 px-6 rounded-lg"
               onClick={onClose}>
@@ -92,13 +102,13 @@ const RegistrarAnillo = ({ excavacionId, onClose }) => {
               disabled={isSubmitting || !isDirty} 
               className={`bg-blue-500 text-white py-3 px-6 rounded-lg ${isSubmitting || !isDirty ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              <span className="flex items-center gap-2"><Save />{isSubmitting ? "Registrando..." : "Registrar"}</span>
+              <span className="flex items-center gap-2"><Save />{isSubmitting ? "Guardando..." : "Guardar"}</span>
             </button>
           </div>
         </form>
       </Modal>
     </ModalContainer>
-  )
-}
+  );
+};
 
-export default RegistrarAnillo;
+export default EditarAnillo;

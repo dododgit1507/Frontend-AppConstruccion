@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Proyecto from './Proyecto';
 import Excavacion from './Excavacion';
+import Anillo from './Anillo';
 
 /**
  * Componente principal que orquesta la navegación entre los diferentes niveles jerárquicos:
@@ -55,7 +56,19 @@ const ExcavacionPage = () => {
             onSelectExcavacion={handleSelectExcavacion} 
           />
         );
-      // Aquí se añadirían los casos para los demás niveles (anillos, sectores, paneles)
+      case 'anillos':
+        return (
+          <Anillo 
+            excavacion={selectedExcavacion}
+            onBack={handleBackToExcavaciones}
+            onSelectAnillo={(anillo) => {
+              setSelectedAnillo(anillo);
+              // Aquí podríamos cambiar a la vista de sectores si se implementa en el futuro
+              // setCurrentView('sectores');
+            }}
+          />
+        );
+      // Aquí se añadirían los casos para los demás niveles (sectores, paneles)
       default:
         return <Proyecto onSelectProyecto={handleSelectProyecto} />;
     }

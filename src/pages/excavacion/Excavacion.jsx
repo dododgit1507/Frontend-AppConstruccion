@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import RegistrarExcavacion from '@/components/excavacion/modales/RegistrarExcavacion';
-import ExcavacionCard from '@/components/excavacion/cards/ExcavacionCard';
-import excavacionService from '@/services/excavacion/excavacionService';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+
+import ExcavacionCard from '@/components/excavacion/cards/ExcavacionCard';
+import RegistrarExcavacion from '@/components/excavacion/modales/RegistrarExcavacion';
+
+import excavacionService from '@/services/excavacion/excavacionService';
 
 const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
   // Estado para modal
