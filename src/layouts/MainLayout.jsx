@@ -163,7 +163,7 @@ const MainLayout = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden relative">        {/* Header optimizado */}
+      <div className={`flex-1 flex flex-col overflow-hidden relative transition-all duration-300 ${chatOpen ? 'mr-[420px]' : 'mr-0'}`}>        {/* Header optimizado */}
         <header className="bg-surface backdrop-blur-xl border-b border-theme-border px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">              <button 
@@ -214,7 +214,7 @@ const MainLayout = () => {
         </header>
 
         {/* Page Content optimizado */}
-        <main className="flex-1 overflow-y-auto p-8 bg-theme-background-secondary">
+        <main className="flex-1 overflow-y-auto p-8 bg-theme-background-secondary transition-all duration-300">
             <div className="max-w-7xl mx-auto px-4">
                 <Outlet />
             </div>
