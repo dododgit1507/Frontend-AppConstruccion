@@ -1,9 +1,9 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Hammer, 
-  Building, 
-  Truck, 
+import {
+  LayoutDashboard,
+  Hammer,
+  Building,
+  Truck,
   Paintbrush,
   User,
   LogOut,
@@ -58,44 +58,42 @@ const MainLayout = () => {
       path: '/dashboard/acabados',
       active: location.pathname === '/dashboard/acabados'
     }
-  ];  return (
+  ]; return (
     <div className="flex h-screen bg-theme-background">      {/* Overlay para móvil con transición */}
-      <div 
-        className={`fixed inset-0 bg-overlay backdrop-blur-sm z-40 lg:hidden overlay-transition ${
-          sidebarOpen 
-            ? 'opacity-100 visible' 
-            : 'opacity-0 invisible'
-        }`}
+      <div
+        className={`fixed inset-0 bg-overlay backdrop-blur-sm z-40 lg:hidden overlay-transition ${sidebarOpen
+          ? 'opacity-100 visible'
+          : 'opacity-0 invisible'
+          }`}
         onClick={toggleSidebar}
       />{/* Sidebar optimizado con transiciones mejoradas */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-80 transform sidebar-transition ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-      }`}>
-          <div className="h-full bg-surface backdrop-blur-xl border-r border-theme-border shadow-2xl sidebar-content"
-             style={{
-               transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
-             }}>
-            {/* Header del Sidebar */}
+      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-80 transform sidebar-transition ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}>
+        <div className="h-full bg-surface backdrop-blur-xl border-r border-theme-border shadow-2xl sidebar-content"
+          style={{
+            transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
+          }}>
+          {/* Header del Sidebar */}
           <div className="p-6 border-b border-theme-border"
-               style={{ transition: 'border-color 0.3s ease' }}>
+            style={{ transition: 'border-color 0.3s ease' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg">
                   <Building className="text-white" size={24} />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-theme-text">BuildApp</h1>
-                  <p className="text-xs text-theme-text-secondary">Construcción Pro</p>
+                  <h1 className="text-xl font-bold text-theme-text">C4</h1>
+                  <p className="text-xs text-theme-text-secondary">Constructicon</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <button 
+                <button
                   onClick={toggleTheme}
                   className="p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg transition-colors"
                   title={`Cambiar a tema ${isDark ? 'claro' : 'oscuro'}`}
                 >
                   {isDark ? <Sun size={18} /> : <Moon size={18} />}
-                </button>                <button 
+                </button>                <button
                   onClick={toggleSidebar}
                   className="lg:hidden text-theme-text-secondary hover:text-theme-text p-2 rounded-lg hover:bg-surface-hover menu-button"
                 >
@@ -109,18 +107,17 @@ const MainLayout = () => {
           <nav className="flex-1 p-4">
             <ul className="space-y-2">
               {menuItems.map((item) => (
-                <li key={item.path}>                  <Link
+                <li key={item.path}>
+                  <Link
                     to={item.path}
                     onClick={() => toggleSidebar()}
-                    className={`flex items-center space-x-3 p-4 rounded-2xl sidebar-item ${
-                      item.active
-                        ? 'bg-primary text-white shadow-xl'
-                        : 'text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover'
-                    }`}
+                    className={`flex items-center space-x-3 p-4 rounded-2xl sidebar-item ${item.active
+                      ? 'bg-primary text-white shadow-xl'
+                      : 'text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover'
+                      }`}
                   >
-                    <div className={`p-2 rounded-xl ${
-                      item.active ? 'bg-white/20' : 'bg-surface-muted group-hover:bg-surface-hover'
-                    }`}>
+                    <div className={`p-2 rounded-xl ${item.active ? 'bg-white/20' : 'bg-surface-muted group-hover:bg-surface-hover'
+                      }`}>
                       <item.icon size={20} />
                     </div>
                     <span className="font-medium">{item.title}</span>
@@ -145,12 +142,12 @@ const MainLayout = () => {
                 </p>
               </div>
             </div>
-            
+
             <div className="space-y-1">
               <button className="flex items-center space-x-2 w-full p-3 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-xl transition-colors">
                 <Settings size={16} />
                 <span className="text-sm">Configuración</span>
-              </button>              <button 
+              </button>              <button
                 onClick={Logout}
                 className="flex items-center space-x-2 w-full p-3 text-theme-text-secondary hover:text-error hover:bg-error-light rounded-xl transition-colors"
               >
@@ -166,7 +163,8 @@ const MainLayout = () => {
       <div className={`flex-1 flex flex-col overflow-hidden relative transition-all duration-300 ${chatOpen ? 'mr-[420px]' : 'mr-0'}`}>        {/* Header optimizado */}
         <header className="bg-surface backdrop-blur-xl border-b border-theme-border px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">              <button 
+            <div className="flex items-center space-x-4">
+              <button
                 onClick={toggleSidebar}
                 className="lg:hidden p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg menu-button"
               >
@@ -182,16 +180,16 @@ const MainLayout = () => {
                 </div>
               </div>
             </div>
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4">
               <div className="hidden md:flex items-center space-x-2 bg-surface px-4 py-2 rounded-xl border border-theme-border">
                 <Search size={16} className="text-theme-text-secondary" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Buscar..."
                   className="bg-transparent text-theme-text placeholder-theme-text-secondary border-none outline-none w-40"
                 />
               </div>
-              <button 
+              <button
                 onClick={toggleTheme}
                 className="p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg transition-colors"
                 title={`Cambiar a tema ${isDark ? 'claro' : 'oscuro'}`}
@@ -202,7 +200,7 @@ const MainLayout = () => {
                 <Bell size={20} />
                 <div className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full" />
               </button>
-              <button 
+              <button
                 onClick={() => setChatOpen(true)}
                 className="relative p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg"
                 title="Asistente IA"
@@ -215,19 +213,19 @@ const MainLayout = () => {
 
         {/* Page Content optimizado */}
         <main className="flex-1 overflow-y-auto p-8 bg-theme-background-secondary transition-all duration-300">
-            <div className="max-w-7xl mx-auto px-4">
-                <Outlet />
-            </div>
+          <div className="max-w-7xl mx-auto px-4">
+            <Outlet />
+          </div>
         </main>
-        
+
         {/* Botón flotante para abrir el chat */}
-        <button 
+        <button
           onClick={() => setChatOpen(true)}
           className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center shadow-lg hover:bg-primary-dark transition-all z-30 ${chatOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
         >
           <MessageSquare size={24} />
         </button>
-        
+
         {/* Componente de Chat IA */}
         <AIChat isOpen={chatOpen} onClose={() => setChatOpen(false)} />
       </div>

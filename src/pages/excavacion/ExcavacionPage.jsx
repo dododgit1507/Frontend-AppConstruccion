@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Proyecto from './Proyecto';
 import Excavacion from './Excavacion';
 import Anillo from './Anillo';
+import Sector from './Sector';
+import Panel from './Panel';
 
 /**
  * Componente principal que orquesta la navegación entre los diferentes niveles jerárquicos:
@@ -10,7 +12,7 @@ import Anillo from './Anillo';
 const ExcavacionPage = () => {
   // Estado para controlar el nivel jerárquico actual
   const [currentView, setCurrentView] = useState('proyectos'); // 'proyectos', 'excavaciones', 'anillos', 'sectores', 'paneles'
-  
+
   // Estados para almacenar las selecciones en cada nivel
   const [selectedProyecto, setSelectedProyecto] = useState(null);
   const [selectedExcavacion, setSelectedExcavacion] = useState(null);
@@ -28,6 +30,16 @@ const ExcavacionPage = () => {
     setCurrentView('anillos');
   };
 
+  const handleSelectAnillo = (anillo) => {
+    setSelectedAnillo(anillo);
+    setCurrentView('sectores');
+  };
+
+  const handleSelectSector = (sector) => {
+    setSelectedSector(sector);
+    setCurrentView('paneles');
+  };
+
   const handleBackToProyectos = () => {
     setCurrentView('proyectos');
     setSelectedProyecto(null);
@@ -43,6 +55,17 @@ const ExcavacionPage = () => {
     setSelectedSector(null);
   };
 
+  const handleBackToAnillos = () => {
+    setCurrentView('anillos');
+    setSelectedAnillo(null);
+    setSelectedSector(null);
+  };
+
+  const handleBackToSectores = () => {
+    setCurrentView('sectores');
+    setSelectedSector(null);
+  };
+
   // Renderizar la vista actual según el nivel jerárquico
   const renderCurrentView = () => {
     switch (currentView) {
@@ -50,21 +73,35 @@ const ExcavacionPage = () => {
         return <Proyecto onSelectProyecto={handleSelectProyecto} />;
       case 'excavaciones':
         return (
-          <Excavacion 
-            proyecto={selectedProyecto} 
-            onBack={handleBackToProyectos} 
-            onSelectExcavacion={handleSelectExcavacion} 
+          <Excavacion
+            proyecto={selectedProyecto}
+            onBack={handleBackToProyectos}
+            onSelectExcavacion={handleSelectExcavacion}
           />
         );
       case 'anillos':
         return (
-          <Anillo 
+          <Anillo
             excavacion={selectedExcavacion}
             onBack={handleBackToExcavaciones}
-            onSelectAnillo={(anillo) => {
-              setSelectedAnillo(anillo);
-              // Aquí podríamos cambiar a la vista de sectores si se implementa en el futuro
-              // setCurrentView('sectores');
+            onSelectAnillo={handleSelectAnillo}
+          />
+        );
+      case 'sectores':
+        return (
+          <Sector
+            anillo={selectedAnillo}
+            onBack={handleBackToAnillos}
+            onSelectSector={handleSelectSector}
+          />
+        );
+      case 'paneles':
+        return (
+          <Panel
+            sector={selectedSector}
+            onBack={handleBackToSectores}
+            onSelectPanel={(panel) => {
+              // Si en el futuro hay un nivel más profundo, se implementaría aquí
             }}
           />
         );

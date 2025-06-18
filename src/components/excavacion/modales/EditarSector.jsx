@@ -14,30 +14,42 @@ import FormGroup from "@/components/ui/FormGroup";
 // Servicio de Sector
 import sectorService from "@/services/excavacion/sectorService";
 
-const RegistrarSector = ({ anilloId, onClose }) => {
-
-  const { register, handleSubmit, formState: { errors, isDirty } } = useForm();
-
+const EditarSector = ({ sector, onClose }) => {
+  const { register, handleSubmit, formState: { errors, isDirty } } = useForm({
+    defaultValues: {
+      nombre: sector.nombre,
+      area: sector.area,
+      profundidad: sector.profundidad,
+      estado: sector.estado,
+    }
+  });
+  
   // Mutación con React Query
-  const { mutate, isPending } = sectorService.useSectorCreateMutation();
+  const { mutate, isPending } = sectorService.useSectorUpdateMutation();
 
   const onSubmit = (data) => {
-    mutate({ ...data, id_anillo: anilloId }, {
+    mutate({ 
+      id: sector.id_sector, 
+      data: { 
+        ...data, 
+        id_anillo: sector.id_anillo 
+      } 
+    }, {
       onSuccess: () => {
-        toast.success("Sector registrado exitosamente");
+        toast.success("Sector actualizado exitosamente");
         onClose();
       },
       onError: (error) => {
         console.error(error);
-        toast.error("Error al crear el sector");
+        toast.error("Error al actualizar el sector");
       }
     });
-  }
+  };
 
   return (
     <ModalContainer>
       <Modal>
-        <FormTitle>Registrar Sector <X onClick={onClose} className="cursor-pointer" /></FormTitle>
+        <FormTitle>Editar Sector <X onClick={onClose} className="cursor-pointer" /></FormTitle>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Separador />
           <FormDivisor>
@@ -54,13 +66,13 @@ const RegistrarSector = ({ anilloId, onClose }) => {
               </FormGroup>
               <FormGroup>
                 <label htmlFor="area">Área</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El área es obligatorio" })} />
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" step="0.01" {...register("area", { required: "El área es obligatorio" })} />
                 {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Profundidad</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profunidad es obligatorio" })} />
-                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+                <label htmlFor="profundidad">Profundidad</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" step="0.01" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
+                {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
               </FormGroup>
             </div>
           </FormDivisor>
@@ -83,20 +95,27 @@ const RegistrarSector = ({ anilloId, onClose }) => {
             </div>
           </FormDivisor>
 
-          {/* Botones - Cancelar y Registrar*/}
+          {/* Botones - Cancelar y Guardar*/}
           <div className="flex flex-row justify-end gap-4">
             <button type="button" className="bg-slate-100 text-slate-500 py-3 px-6 rounded-lg"
               onClick={onClose}>
               Cancelar
             </button>
-            <button type="submit" disabled={isPending} className="bg-blue-500 text-white py-3 px-6 rounded-lg">
-              <span className="flex items-center gap-2"><Save />{isPending ? "Registrando..." : "Registrar"}</span>
+            <button 
+              type="submit" 
+              disabled={!isDirty || isPending} 
+              className={`py-3 px-6 rounded-lg ${!isDirty ? 'bg-blue-300' : 'bg-blue-500'} text-white`}
+            >
+              <span className="flex items-center gap-2">
+                <Save />
+                {isPending ? "Guardando..." : "Guardar"}
+              </span>
             </button>
           </div>
         </form>
       </Modal>
     </ModalContainer>
-  )
-}
+  );
+};
 
-export default RegistrarSector;
+export default EditarSector;

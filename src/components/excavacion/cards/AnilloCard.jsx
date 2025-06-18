@@ -38,11 +38,11 @@ const AnilloCard = ({ anillo, onClick }) => {
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-slate-500">Profundidad:</span>
-              <span className="font-medium text-slate-700 ml-1">{anillo.profundidad}m</span>
+              <span className="font-medium text-slate-700 ml-1">{anillo.profundidad} m</span>
             </div>
             <div>
               <span className="text-slate-500">Área:</span>
-              <span className="font-medium text-slate-700 ml-1">{anillo.area}m²</span>
+              <span className="font-medium text-slate-700 ml-1">{anillo.area} m²</span>
             </div>
           </div>
 

@@ -11,33 +11,36 @@ import FormDivisor from "@/components/ui/FormDivisor";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import FormGroup from "@/components/ui/FormGroup";
 
-// Servicio de Sector
-import sectorService from "@/services/excavacion/sectorService";
+// Servicio de Panel
+import panelService from "@/services/excavacion/panelService";
 
-const RegistrarSector = ({ anilloId, onClose }) => {
-
-  const { register, handleSubmit, formState: { errors, isDirty } } = useForm();
+const RegistrarPanel = ({ sectorId, onClose }) => {
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   // Mutación con React Query
-  const { mutate, isPending } = sectorService.useSectorCreateMutation();
+  const { mutate, isPending } = panelService.usePanelCreateMutation();
 
   const onSubmit = (data) => {
-    mutate({ ...data, id_anillo: anilloId }, {
-      onSuccess: () => {
-        toast.success("Sector registrado exitosamente");
-        onClose();
-      },
-      onError: (error) => {
-        console.error(error);
-        toast.error("Error al crear el sector");
+    // Usar la mutación en lugar de llamar directamente al servicio
+    mutate(
+      { ...data, id_sector: sectorId },
+      {
+        onSuccess: () => {
+          toast.success("Panel creado exitosamente");
+          onClose();
+        },
+        onError: (error) => {
+          console.error(error);
+          toast.error("Error al crear el panel");
+        }
       }
-    });
-  }
+    );
+  };
 
   return (
     <ModalContainer>
       <Modal>
-        <FormTitle>Registrar Sector <X onClick={onClose} className="cursor-pointer" /></FormTitle>
+        <FormTitle>Registrar Panel <X onClick={onClose} className="cursor-pointer" /></FormTitle>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Separador />
           <FormDivisor>
@@ -53,21 +56,21 @@ const RegistrarSector = ({ anilloId, onClose }) => {
                 {errors.nombre && <ErrorMessage>{errors.nombre.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Área</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El área es obligatorio" })} />
+                <label htmlFor="area">Area (m²)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" step="0.01" id="area" {...register("area", { required: "El area es obligatorio" })} />
                 {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Profundidad</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profunidad es obligatorio" })} />
-                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+                <label htmlFor="profundidad">Profundidad (m)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" step="0.01" id="profundidad" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
+                {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
               </FormGroup>
             </div>
           </FormDivisor>
           <FormDivisor>
             {/* Subtitulo */}
             <div className="flex-1/2">
-              <FormSubtitle>Estado del Sector</FormSubtitle>
+              <FormSubtitle>Estado y Fechas</FormSubtitle>
             </div>
             {/* Contenido */}
             <div className="flex-1/2 space-y-2">
@@ -96,7 +99,7 @@ const RegistrarSector = ({ anilloId, onClose }) => {
         </form>
       </Modal>
     </ModalContainer>
-  )
-}
+  );
+};
 
-export default RegistrarSector;
+export default RegistrarPanel;

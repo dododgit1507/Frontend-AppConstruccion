@@ -101,12 +101,12 @@ const EditarProyecto = ({ onClose, proyecto }) => {
             <div className="flex-1/2 space-y-2">
               <FormGroup>
                 <label htmlFor="profundidad">Profundidad (m)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" step="0.01" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
                 {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
                 <label htmlFor="area">Área (m²)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El area es obligatoria" })} />
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" step="0.01" {...register("area", { required: "El area es obligatoria" })} />
                 {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
               </FormGroup>
             </div>
