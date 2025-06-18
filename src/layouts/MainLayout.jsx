@@ -61,14 +61,13 @@ const MainLayout = () => {
   ]; return (
     <div className="flex h-screen bg-theme-background">      {/* Overlay para móvil con transición */}
       <div
-        className={`fixed inset-0 bg-overlay backdrop-blur-sm z-40 lg:hidden overlay-transition ${sidebarOpen
+        className={`fixed inset-0 bg-overlay backdrop-blur-sm z-40 overlay-transition ${sidebarOpen
           ? 'opacity-100 visible'
           : 'opacity-0 invisible'
           }`}
         onClick={toggleSidebar}
       />{/* Sidebar optimizado con transiciones mejoradas */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-80 transform sidebar-transition ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}>
+      <div className={`fixed inset-y-0 left-0 z-50 w-80 transform sidebar-transition ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="h-full bg-surface backdrop-blur-xl border-r border-theme-border shadow-2xl sidebar-content"
           style={{
             transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
@@ -78,8 +77,8 @@ const MainLayout = () => {
             style={{ transition: 'border-color 0.3s ease' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                  <Building className="text-white" size={24} />
+                <div className="w-12 h-12 bg-slate-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <img src="/img/c4-logo.jpg" className="w-8 h-8 rounded-lg" alt="C4 Logo" />
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-theme-text">C4</h1>
@@ -138,7 +137,7 @@ const MainLayout = () => {
                   {usuario?.nombre || 'Usuario'}
                 </p>
                 <p className="text-xs text-theme-text-secondary">
-                  {usuario?.rol || 'Supervisor'}
+                  {usuario?.rol || 'Administrador'}
                 </p>
               </div>
             </div>
@@ -160,13 +159,14 @@ const MainLayout = () => {
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col overflow-hidden relative transition-all duration-300 ${chatOpen ? 'mr-[420px]' : 'mr-0'}`}>        {/* Header optimizado */}
+      <div className={`flex-1 flex flex-col overflow-hidden relative transition-all duration-300 ${chatOpen ? 'mr-[420px]' : 'mr-0'} ${sidebarOpen ? 'lg:ml-80' : 'ml-0'}`}>        {/* Header optimizado */}
         <header className="bg-surface backdrop-blur-xl border-b border-theme-border px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
                 onClick={toggleSidebar}
-                className="lg:hidden p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg menu-button"
+                className="p-2 text-theme-text-secondary hover:text-theme-text hover:bg-surface-hover rounded-lg menu-button"
+                title="Mostrar/Ocultar menú"
               >
                 <Menu size={24} />
               </button>
@@ -221,7 +221,7 @@ const MainLayout = () => {
         {/* Botón flotante para abrir el chat */}
         <button
           onClick={() => setChatOpen(true)}
-          className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center shadow-lg hover:bg-primary-dark transition-all z-30 ${chatOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+          className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg hover:bg-primary-dark transition-all z-30 ${chatOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
         >
           <MessageSquare size={24} />
         </button>

@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-light rounded-2xl mb-4 animate-pulse">
             <Building className="text-primary" size={32} />
           </div>
-          <h2 className="text-xl font-semibold text-theme-text mb-2">BuildApp</h2>
+          <h2 className="text-xl font-semibold text-theme-text mb-2">C4</h2>
           <p className="text-theme-text-secondary">Verificando autenticación...</p>
           <div className="mt-4">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>

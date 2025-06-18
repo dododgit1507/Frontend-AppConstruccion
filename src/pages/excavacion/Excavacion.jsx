@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 
 import ExcavacionCard from '@/components/excavacion/cards/ExcavacionCard';
 import RegistrarExcavacion from '@/components/excavacion/modales/RegistrarExcavacion';
+import ExcavacionDashboard from '@/components/excavacion/charts/ExcavacionDashboard';
 
 import excavacionService from '@/services/excavacion/excavacionService';
 
@@ -65,18 +66,22 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
 
       {/* Información del proyecto */}
       <div className="bg-white rounded-xl p-6 border border-slate-200">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="text-center">
             <p className="text-slate-500 text-sm">Estado</p>
             <p className="text-2xl font-bold text-slate-800 capitalize">{proyecto?.estado}</p>
           </div>
           <div className="text-center">
             <p className="text-slate-500 text-sm">Profundidad</p>
-            <p className="text-2xl font-bold text-slate-800">{proyecto?.profundidad}m</p>
+            <p className="text-2xl font-bold text-slate-800">{proyecto?.profundidad} m</p>
           </div>
           <div className="text-center">
             <p className="text-slate-500 text-sm">Área</p>
-            <p className="text-2xl font-bold text-slate-800">{proyecto?.area}m²</p>
+            <p className="text-2xl font-bold text-slate-800">{proyecto?.area} m²</p>
+          </div>
+          <div className="text-center">
+            <p className="text-slate-500 text-sm">Volumen</p>
+            <p className="text-2xl font-bold text-slate-800">{proyecto?.profundidad * proyecto?.area} m³</p>
           </div>
           <div className="text-center">
             <p className="text-slate-500 text-sm">Residente</p>
@@ -84,6 +89,11 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
           </div>
         </div>
       </div>
+
+      {/* Dashboard de gráficos */}
+      {!loading && excavacionesConProgreso.length > 0 && (
+        <ExcavacionDashboard excavaciones={excavacionesConProgreso} proyecto={proyecto} />
+      )}
 
       {/* Lista de excavaciones */}
       {loading ? (

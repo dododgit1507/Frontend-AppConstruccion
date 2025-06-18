@@ -44,7 +44,7 @@ const Panel = ({ sector, onBack, onSelectPanel }) => {
                 {sector?.nombre} - Paneles
               </h1>
               <p className="text-slate-500">
-                Posición: {sector?.posicion} • Ángulo: {sector?.angulo}°
+                Profundidad: {sector?.profundidad}m • Área: {sector?.area}m²
               </p>
             </div>
           </div>
