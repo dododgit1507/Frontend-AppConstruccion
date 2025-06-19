@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api/api";
 import { EXCAVACION_QUERY_KEY } from "./excavacionService";
+import sectorService from "./sectorService";
 
 // Clave para la caché de anillos
 export const ANILLO_QUERY_KEY = ["anillo"];
@@ -32,6 +33,18 @@ const anilloService = {
     return response.data;
   },
 
+  /**
+   * Calcula el progreso de un anillo basado en sus sectores
+   * @param {Array} sectores - Lista de sectores del anillo
+   * @returns {number} - Porcentaje de progreso (0-100)
+   */
+  calcularProgresoAnillo: (sectores) => {
+    if (!sectores || sectores.length === 0) return 0;
+    
+    const sectoresFinalizados = sectores.filter(sector => sector.estado === 'finalizada').length;
+    return Math.round((sectoresFinalizados / sectores.length) * 100);
+  },
+
   // Hooks de React Query
   useAnilloQuery: () => {
     return useQuery({
@@ -54,14 +67,46 @@ const anilloService = {
    * @returns {UseQueryResult} - Resultado de la consulta
    */
   useAnillosConProgresoQuery: (excavacionId) => {
+    const queryClient = useQueryClient();
+    
     return useQuery({
       queryKey: [...ANILLO_QUERY_KEY, 'excavacion', excavacionId, 'conProgreso'],
       queryFn: async () => {
         // Obtenemos todos los anillos de la excavación
         const anillos = await anilloService.getByExcavacionId(excavacionId);
         
-        // Aquí podríamos enriquecer los anillos con más información si fuera necesario
-        return anillos;
+        // Calculamos el progreso para cada anillo
+        const anillosActualizados = [];
+        
+        for (const anillo of anillos) {
+          try {
+            // Obtener los sectores del anillo
+            const sectores = await queryClient.fetchQuery({
+              queryKey: ['sectores', 'anillo', anillo.id_anillo],
+              queryFn: () => sectorService.getByAnilloId(anillo.id_anillo),
+            });
+            
+            // Calcular el progreso basado en los sectores
+            const progreso = anilloService.calcularProgresoAnillo(sectores);
+            
+            // Añadir el progreso y los sectores al anillo
+            anillosActualizados.push({
+              ...anillo,
+              progreso,
+              sectores
+            });
+          } catch (error) {
+            console.error(`Error al obtener sectores para el anillo ${anillo.id_anillo}:`, error);
+            // Si hay error, añadir el anillo sin progreso calculado
+            anillosActualizados.push({
+              ...anillo,
+              progreso: 0,
+              sectores: []
+            });
+          }
+        }
+        
+        return anillosActualizados;
       },
       enabled: !!excavacionId, // Solo ejecuta la consulta si hay un ID de excavación
     });

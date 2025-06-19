@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Hammer,
@@ -15,18 +15,24 @@ import {
   Zap,
   Sun,
   Moon,
-  MessageSquare
+  MessageSquare,
+  ChevronDown,
+  Building2
 } from 'lucide-react';
 import { useApp } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { useProyecto } from '../context/ProyectoContext';
 import { useState } from 'react';
 import AIChat from '../components/AIChat/AIChat';
 
 const MainLayout = () => {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme, isDark } = useApp();
   const { usuario, Logout } = useAuth();
+  const { proyectoActual, cambiarProyecto } = useProyecto();
   const location = useLocation();
+  const navigate = useNavigate();
   const [chatOpen, setChatOpen] = useState(false);
+  const [showProyectoMenu, setShowProyectoMenu] = useState(false);
   const menuItems = [
     {
       title: 'Panel de Control',
@@ -61,7 +67,7 @@ const MainLayout = () => {
   ]; return (
     <div className="flex h-screen bg-theme-background">      {/* Overlay para móvil con transición */}
       <div
-        className={`fixed inset-0 bg-overlay backdrop-blur-sm z-40 overlay-transition ${sidebarOpen
+        className={`fixed inset-0 bg-overlay z-40 overlay-transition ${sidebarOpen
           ? 'opacity-100 visible'
           : 'opacity-0 invisible'
           }`}
@@ -100,6 +106,43 @@ const MainLayout = () => {
                 </button>
               </div>
             </div>
+          </div>
+
+          {/* Proyecto Seleccionado */}
+          <div className="px-4 py-3 mt-2 mb-4 bg-surface-hover rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Building2 size={18} className="text-primary" />
+                <div>
+                  <p className="text-xs text-theme-text-secondary">Proyecto actual:</p>
+                  <h3 className="text-sm font-medium text-theme-text truncate max-w-[180px]">
+                    {proyectoActual ? proyectoActual.nombre : 'Sin proyecto'}
+                  </h3>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  cambiarProyecto();
+                  navigate('/seleccion-proyecto');
+                }}
+                className="p-1.5 text-theme-text-secondary hover:text-theme-text hover:bg-surface rounded-lg transition-colors"
+                title="Cambiar proyecto"
+              >
+                <ChevronDown size={16} />
+              </button>
+            </div>
+            {proyectoActual && (
+              <div className="mt-2 text-xs text-theme-text-secondary">
+                <div className="flex justify-between">
+                  <span>Estado:</span>
+                  <span className="font-medium capitalize">{proyectoActual.estado}</span>
+                </div>
+                <div className="flex justify-between mt-1">
+                  <span>Responsable:</span>
+                  <span className="font-medium">{proyectoActual.responsable}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Navigation Menu */}
@@ -174,6 +217,22 @@ const MainLayout = () => {
                 <h2 className="text-xl font-semibold text-theme-text">
                   {menuItems.find(item => item.active)?.title || 'Panel de Control'}
                 </h2>
+                {proyectoActual && (
+                  <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-primary-light text-primary rounded-lg text-sm border border-primary/20">
+                    <Building2 size={14} />
+                    <span className="font-medium">{proyectoActual.nombre}</span>
+                    <button 
+                      onClick={() => {
+                        cambiarProyecto();
+                        navigate('/seleccion-proyecto');
+                      }}
+                      className="ml-1 hover:bg-primary/10 p-0.5 rounded"
+                      title="Cambiar proyecto"
+                    >
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
+                )}
                 <div className="hidden md:flex items-center space-x-2 px-3 py-1 bg-success-light text-success rounded-full text-xs">
                   <Zap size={12} />
                   <span>Sistema Activo</span>

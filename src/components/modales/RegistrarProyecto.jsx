@@ -18,14 +18,17 @@ const RegistrarProyecto = ({ onClose }) => {
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
+  // Usar el hook de mutación de React Query
+  const createProyectoMutation = proyectoService.useProyectoCreateMutation();
+
   const onSubmit = async (data) => {
     try {
-      await proyectoService.create(data);
+      await createProyectoMutation.mutateAsync(data);
       toast.success("Proyecto creado exitosamente");
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Error al crear el proyecto");
+      toast.error("Error al crear el proyecto: " + (error.message || 'Error desconocido'));
     }
   }
 

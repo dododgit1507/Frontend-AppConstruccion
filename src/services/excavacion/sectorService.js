@@ -1,5 +1,6 @@
 import api from "@/api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import panelService from "./panelService";
 
 // Claves para React Query
 const SECTOR_QUERY_KEY = ["sectores"];
@@ -32,6 +33,18 @@ const sectorService = {
     return response.data;
   },
 
+  /**
+   * Calcula el progreso de un sector basado en sus paneles
+   * @param {Array} paneles - Lista de paneles del sector
+   * @returns {number} - Porcentaje de progreso (0-100)
+   */
+  calcularProgresoSector: (paneles) => {
+    if (!paneles || paneles.length === 0) return 0;
+    
+    const panelesFinalizados = paneles.filter(panel => panel.estado === 'finalizada').length;
+    return Math.round((panelesFinalizados / paneles.length) * 100);
+  },
+
   // Hooks de React Query
   useSectorQuery: () => {
     return useQuery({
@@ -54,14 +67,46 @@ const sectorService = {
    * @returns {UseQueryResult} - Resultado de la consulta
    */
   useSectoresConProgresoQuery: (anilloId) => {
+    const queryClient = useQueryClient();
+    
     return useQuery({
       queryKey: [...SECTOR_QUERY_KEY, 'anillo', anilloId, 'conProgreso'],
       queryFn: async () => {
         // Obtenemos todos los sectores del anillo
         const sectores = await sectorService.getByAnilloId(anilloId);
         
-        // Aquí podríamos enriquecer los sectores con más información si fuera necesario
-        return sectores;
+        // Calculamos el progreso para cada sector
+        const sectoresActualizados = [];
+        
+        for (const sector of sectores) {
+          try {
+            // Obtener los paneles del sector
+            const paneles = await queryClient.fetchQuery({
+              queryKey: ['paneles', 'sector', sector.id_sector],
+              queryFn: () => panelService.getBySectorId(sector.id_sector),
+            });
+            
+            // Calcular el progreso basado en los paneles
+            const progreso = sectorService.calcularProgresoSector(paneles);
+            
+            // Añadir el progreso y los paneles al sector
+            sectoresActualizados.push({
+              ...sector,
+              progreso,
+              paneles
+            });
+          } catch (error) {
+            console.error(`Error al obtener paneles para el sector ${sector.id_sector}:`, error);
+            // Si hay error, añadir el sector sin progreso calculado
+            sectoresActualizados.push({
+              ...sector,
+              progreso: 0,
+              paneles: []
+            });
+          }
+        }
+        
+        return sectoresActualizados;
       },
       enabled: !!anilloId, // Solo ejecuta la consulta si hay un ID de anillo
     });

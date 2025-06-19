@@ -21,7 +21,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard", { replace: true });
+      navigate("/seleccion-proyecto", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 

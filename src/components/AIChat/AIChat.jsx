@@ -1,500 +1,454 @@
-import { useState, useEffect, useRef } from 'react';
-import { Send, X, Zap, Loader2, ChevronDown, ChevronUp, MessageSquare, Database, CheckCircle, XCircle, Search, Plus, Edit, Trash2, Info, Bot, User } from 'lucide-react';
-import api from '@/api/api';
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Bot, User, Database, Mail, AlertTriangle, CheckCircle, XCircle, Copy, Trash2, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import api from "@/api/api";
 
-const AIChat = ({ isOpen, onClose }) => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
+// Estilos CSS para la animación del layout
+const chatStyles = {
+  // Estilo para el contenedor principal que envuelve toda la aplicación
+  mainContainer: (isOpen) => ({
+    transition: 'padding-right 0.3s ease-in-out',
+    paddingRight: isOpen ? '384px' : '0',
+  }),
+  
+  // Estilo para la animación de entrada del chat
+  chatPanel: (isOpen) => ({
+    transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+    boxShadow: isOpen ? '-5px 0 25px rgba(0, 0, 0, 0.1)' : 'none',
+  }),
+  
+  // Estilo para el botón flotante
+  floatingButton: {
+    transition: 'all 0.3s ease-in-out',
+    transform: 'scale(1)',
+    '&:hover': {
+      transform: 'scale(1.05)',
+    },
+  }
+};
+
+
+const AIChat = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  
+  // Manejar la apertura y cierre del chat con animación
+  const toggleChat = (open) => {
+    setIsAnimating(true);
+    setIsOpen(open);
+    
+    // Notificar al layout principal sobre el cambio
+    if (window.dispatchEvent) {
+      window.dispatchEvent(new CustomEvent('chat-toggle', { detail: { isOpen: open } }));
+    }
+    
+    // Resetear el estado de animación después de completarla
+    setTimeout(() => setIsAnimating(false), 300);
+  };
+  const { user } = useAuth();
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      type: 'bot',
+      content: '¡Hola! Soy tu asistente de IA. Puedo ayudarte con consultas de base de datos y envío de correos electrónicos. ¿En qué puedo ayudarte hoy?',
+      timestamp: new Date()
+    }
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [showVerification, setShowVerification] = useState(false);
+  const [pendingDeleteQuery, setPendingDeleteQuery] = useState('');
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Enfocar el input cuando se abre el chat
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current.focus(), 100);
-    }
-  }, [isOpen]);
+  // Auto scroll to bottom
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  // Auto-scroll al último mensaje
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToBottom();
   }, [messages]);
 
-  // Mensaje de bienvenida
+  // Focus input on component mount
   useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([{
-        role: 'assistant',
-        content: '¡Hola! 👋 Soy tu asistente de base de datos. Puedo ayudarte a consultar, crear, actualizar y eliminar información de tus proyectos de excavación.',
-        type: 'welcome',
-        suggestions: [
-          'Muestra todos los proyectos',
-          'Busca excavaciones en progreso',
-          '¿Cuántos usuarios hay registrados?'
-        ]
-      }]);
-    }
+    inputRef.current?.focus();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const handleSendMessage = async (messageToSend = inputMessage, includeVerification = false) => {
+    if (!messageToSend.trim() && !includeVerification) return;
 
-    const userMessage = input.trim();
-    setInput('');
-    setError(null);
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: messageToSend,
+      timestamp: new Date()
+    };
 
-    // Añadir mensaje del usuario al chat
-    setMessages(prev => [...prev, { role: 'user', content: userMessage, timestamp: new Date() }]);
-
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage('');
     setIsLoading(true);
+
     try {
-      // Llamada a la API del agente
-      const response = await api.post('/ai/chat', { message: userMessage });
+      const payload = {
+        message: includeVerification ? pendingDeleteQuery : messageToSend
+      };
+      
+      // Solo añadir userId si el usuario está autenticado
+      if (user && user.id) {
+        payload.userId = user.id;
+      }
 
-      // Procesar la respuesta según su tipo
-      const aiResponse = response.data;
+      if (includeVerification) {
+        payload.verificationCode = verificationCode;
+      }
 
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: aiResponse.message || 'No se obtuvo respuesta',
-        data: aiResponse.data,
-        rawData: aiResponse.rawData,
-        summary: aiResponse.summary,
-        success: aiResponse.success,
-        type: aiResponse.type,
-        operation: aiResponse.operation,
-        model: aiResponse.model,
-        userFriendly: aiResponse.userFriendly,
-        timestamp: new Date()
-      }]);
-    } catch (err) {
-      console.error('Error al enviar mensaje:', err);
-      setError('Error al comunicarse con el asistente. Inténtalo de nuevo.');
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'Lo siento, ocurrió un error al procesar tu consulta. Por favor, inténtalo de nuevo.',
-        error: true,
-        timestamp: new Date()
-      }]);
+      const response = await api.post('/ai/chat', payload);
+
+      const data = response.data;
+
+      const botMessage = {
+        id: Date.now() + 1,
+        type: 'bot',
+        content: data.message,
+        timestamp: new Date(),
+        operation: data.operation || null,
+        data: data.data || null,
+        success: data.success,
+        requiresVerification: data.type === 'verification_required'
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+
+      // Handle verification requirement
+      if (data.type === 'verification_required') {
+        setShowVerification(true);
+        setPendingDeleteQuery(messageToSend);
+      } else {
+        setShowVerification(false);
+        setPendingDeleteQuery('');
+        setVerificationCode('');
+      }
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        type: 'bot',
+        content: '❌ Error de conexión. Por favor, inténtalo de nuevo.',
+        timestamp: new Date(),
+        success: false
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    setInput(suggestion);
-    if (inputRef.current) {
-      inputRef.current.focus();
+  const handleVerificationSubmit = () => {
+    if (!verificationCode.trim()) {
+      alert('Por favor, ingresa el código de verificación');
+      return;
+    }
+    handleSendMessage(verificationCode, true);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (showVerification) {
+        handleVerificationSubmit();
+      } else {
+        handleSendMessage();
+      }
     }
   };
 
-  // Obtener icono según tipo de operación
-  const getOperationIcon = (operation) => {
-    switch (operation) {
-      case 'query': return <Search size={16} className="text-blue-500" />;
-      case 'create': return <Plus size={16} className="text-green-500" />;
-      case 'update': return <Edit size={16} className="text-yellow-500" />;
-      case 'delete': return <Trash2 size={16} className="text-red-500" />;
-      default: return <Database size={16} className="text-gray-500" />;
-    }
+  const formatTimestamp = (timestamp) => {
+    return new Intl.DateTimeFormat('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(timestamp);
   };
 
-  // Renderizar mensaje según su tipo
-  const renderMessage = (message, index) => {
-    if (message.role === 'user') {
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const clearChat = () => {
+    setMessages([
+      {
+        id: 1,
+        type: 'bot',
+        content: '¡Hola! Soy tu asistente de IA. ¿En qué puedo ayudarte hoy?',
+        timestamp: new Date()
+      }
+    ]);
+    setShowVerification(false);
+    setPendingDeleteQuery('');
+    setVerificationCode('');
+  };
+
+  const renderMessageContent = (message) => {
+    if (message.data && Array.isArray(message.data) && message.data.length > 0) {
       return (
-        <div key={index} className="flex justify-end mb-4">
-          <div className="flex items-start space-x-2 max-w-[85%]">
-            <div className="bg-gradient-to-br from-blue-400 to-blue-600 text-white rounded-2xl rounded-tr-md px-4 py-3 shadow-lg">
-              <p className="text-sm leading-relaxed text-white">{message.content}</p>
-              {message.timestamp && (
-                <p className="text-xs opacity-75 mt-1 text-blue-50">
-                  {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                </p>
-              )}
-            </div>
-            <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-              <User size={16} className="text-white" />
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      // Mensaje del asistente
-      return (
-        <div key={index} className="flex justify-start mb-4">
-          <div className="flex items-start space-x-3 max-w-[90%]">
-            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center">
-              <Bot size={16} className="text-white" />
-            </div>
-            <div className="flex-1">
-              {message.error ? (
-                <ErrorMessage message={message} />
-              ) : message.type === 'welcome' ? (
-                <WelcomeMessage message={message} onSuggestionClick={handleSuggestionClick} />
-              ) : message.type === 'database_result' ? (
-                <DatabaseResultMessage message={message} />
-              ) : (
-                <RegularMessage message={message} />
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
-
-  return (
-    <div className={`fixed inset-y-0 right-0 w-[420px] bg-white border-l border-blue-100 shadow-2xl z-50 transform transition-all duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-      {/* Header */}
-      <div className="p-4 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-blue-100">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-              <Bot className="text-white" size={20} />
-            </div>
-            <div>
-              <h2 className="font-bold text-blue-900">Asistente IA</h2>
-              <p className="text-xs text-blue-600">Gestión de Base de Datos</p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-blue-400 hover:text-blue-600 p-2 rounded-lg hover:bg-blue-50 transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
-      </div>
-
-      {/* Messages Area */}
-      <div className="flex-1 p-4 overflow-y-auto h-[calc(95vh-140px)] bg-blue-50">
-        {messages.map((message, index) => renderMessage(message, index))}
-
-        {isLoading && (
-          <div className="flex justify-start mb-4">
-            <div className="flex items-start space-x-3 max-w-[90%]">
-              <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                <Bot size={16} className="text-white" />
-              </div>
-              <div className="bg-white border border-blue-100 rounded-2xl rounded-tl-md px-4 py-3 shadow-lg">
-                <div className="flex items-center space-x-2">
-                  <Loader2 size={16} className="animate-spin text-blue-500" />
-                  <span className="text-blue-600 text-sm">Procesando consulta...</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg p-3 mb-3 text-sm">
-            <div className="flex items-center space-x-2">
-              <XCircle size={16} />
-              <span>{error}</span>
-            </div>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Area */}
-      <div className="p-4 border-t border-blue-100 bg-white text-black">
-        <form onSubmit={handleSubmit} className="flex items-center space-x-3">
-          <div className="flex-1">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-              placeholder="Escribe tu consulta... (Enter para enviar, Shift+Enter para nueva línea)"
-              className="w-full bg-blue-50 text-blue-900 placeholder-blue-400 border border-blue-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32 min-h-[48px]"
-              disabled={isLoading}
-              rows={2}
-              style={{ height: 'auto', minHeight: '48px' }}
-              onInput={(e) => {
-                e.target.style.height = 'auto';
-                e.target.style.height = Math.min(e.target.scrollHeight, 86) + 'px';
-              }}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isLoading || !input.trim()}
-            className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${isLoading || !input.trim()
-              ? 'bg-blue-200 text-blue-400 cursor-not-allowed'
-              : 'bg-gradient-to-br from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800 shadow-lg hover:shadow-xl transform hover:scale-105'
-              }`}
-          >
-            {isLoading ? (
-              <Loader2 size={20} className="animate-spin" />
-            ) : (
-              <Send size={20} />
-            )}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-// Componente para mensaje de bienvenida
-const WelcomeMessage = ({ message, onSuggestionClick }) => (
-  <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl rounded-tl-md p-4 shadow-lg">
-    <p className="text-blue-800 mb-3 leading-relaxed">{message.content}</p>
-
-    {message.suggestions && (
-      <div className="space-y-2">
-        <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Sugerencias:</p>
-        <div className="grid gap-2">
-          {message.suggestions.map((suggestion, idx) => (
-            <button
-              key={idx}
-              onClick={() => onSuggestionClick(suggestion)}
-              className="text-left p-2 bg-white/50 hover:bg-white rounded-lg border border-blue-200 text-sm text-blue-700 transition-colors"
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-      </div>
-    )}
-  </div>
-);
-
-// Componente para mensajes de error
-const ErrorMessage = ({ message }) => (
-  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl rounded-tl-md p-4 shadow-lg">
-    <div className="flex items-center space-x-2 mb-2">
-      <XCircle size={16} className="text-red-500" />
-      <span className="font-semibold text-red-700 dark:text-red-300 text-sm">Error</span>
-    </div>
-    <p className="text-red-600 dark:text-red-400 text-sm leading-relaxed">{message.content}</p>
-    {message.timestamp && (
-      <p className="text-xs text-red-500 dark:text-red-400 mt-2 opacity-75">
-        {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-      </p>
-    )}
-  </div>
-);
-
-// Componente para mensajes regulares
-const RegularMessage = ({ message }) => (
-  <div className="bg-white border border-blue-100 rounded-2xl rounded-tl-md p-4 shadow-lg">
-    <div className="prose prose-sm dark:prose-invert max-w-none">
-      <p className="text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">{message.content}</p>
-    </div>
-    {message.timestamp && (
-      <p className="text-xs text-blue-500 mt-2 opacity-75">
-        {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-      </p>
-    )}
-  </div>
-);
-
-// Componente para resultados de base de datos
-const DatabaseResultMessage = ({ message }) => {
-  const getOperationIcon = (operation) => {
-    switch (operation) {
-      case 'query': return <Search size={16} className="text-blue-500" />;
-      case 'create': return <Plus size={16} className="text-green-500" />;
-      case 'update': return <Edit size={16} className="text-orange-500" />;
-      case 'delete': return <Trash2 size={16} className="text-red-500" />;
-      default: return <Database size={16} className="text-gray-500" />;
-    }
-  };
-
-  const getOperationColor = (operation, success) => {
-    if (!success) return 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20';
-
-    switch (operation) {
-      case 'query': return 'border-blue-200 bg-blue-50';
-      case 'create': return 'border-green-200 bg-green-50';
-      case 'update': return 'border-orange-200 bg-orange-50';
-      case 'delete': return 'border-red-200 bg-red-50';
-      default: return 'border-blue-200 bg-blue-50';
-    }
-  };
-
-  const getOperationText = (operation) => {
-    switch (operation) {
-      case 'query': return 'Consulta';
-      case 'create': return 'Creación';
-      case 'update': return 'Actualización';
-      case 'delete': return 'Eliminación';
-      default: return 'Operación';
-    }
-  };
-
-  return (
-    <div className={`border rounded-2xl rounded-tl-md p-4 shadow-lg ${getOperationColor(message.operation, message.success)}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          {getOperationIcon(message.operation)}
-          <span className="font-semibold text-blue-800 text-sm">
-            {getOperationText(message.operation)}
-          </span>
-          {message.success ? (
-            <CheckCircle size={16} className="text-green-500" />
-          ) : (
-            <XCircle size={16} className="text-red-500" />
-          )}
-        </div>
-
-        {message.model && (
-          <span className="text-xs px-2 py-1 rounded-full bg-white/70 text-blue-600 border border-blue-200">
-            {message.model}
-          </span>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="prose prose-sm dark:prose-invert max-w-none">
-        <p className="text-blue-800 leading-relaxed whitespace-pre-wrap">{message.content}</p>
-      </div>
-
-      {/* Summary */}
-      {message.summary && (
-        <div className="mt-3 p-2 bg-white/50 rounded-lg border border-blue-200">
-          <div className="flex items-center space-x-2 text-xs text-blue-600">
-            <Info size={12} />
-            <span>
-              {message.summary.type === 'array' && `${message.summary.total} registros encontrados`}
-              {message.summary.type === 'update' && `${message.summary.affectedRows} registros afectados`}
-              {message.summary.type === 'number' && `${message.summary.value} registros procesados`}
-              {message.summary.type === 'object' && 'Registro procesado'}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* Data Display */}
-      {message.data && (
-        <div className="mt-3">
-          <DatabaseResultDisplay data={message.data} />
-        </div>
-      )}
-
-      {/* Timestamp */}
-      {message.timestamp && (
-        <p className="text-xs text-blue-500 mt-3 opacity-75">
-          {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-        </p>
-      )}
-    </div>
-  );
-};
-
-// Componente para mostrar resultados de la base de datos
-const DatabaseResultDisplay = ({ data }) => {
-  const [expanded, setExpanded] = useState(false);
-
-  // Si no hay datos
-  if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
-    return null;
-  }
-
-  // Si es un array de resultados
-  if (Array.isArray(data)) {
-    if (data.length === 0) return null;
-
-    return (
-      <div className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
-        <div
-          className="bg-gray-50 dark:bg-gray-700 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-          onClick={() => setExpanded(!expanded)}
-        >
-          <div className="flex items-center space-x-2">
-            <Database size={16} className="text-gray-600 dark:text-gray-400" />
-            <span className="font-medium text-gray-800 dark:text-gray-200">
-              {data.length} registro{data.length !== 1 ? 's' : ''}
-            </span>
-          </div>
-          {expanded ? <ChevronUp size={16} className="text-gray-600 dark:text-gray-400" /> : <ChevronDown size={16} className="text-gray-600 dark:text-gray-400" />}
-        </div>
-
-        {expanded && (
-          <div className="max-h-80 overflow-y-auto">
-            {data.slice(0, 10).map((item, idx) => (
-              <div key={idx} className="p-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                <div className="grid gap-2">
-                  {Object.entries(item).map(([key, valueObj]) => (
-                    <div key={key} className="flex items-start">
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 w-1/3 uppercase tracking-wide">
-                        {key.replace('_', ' ')}:
-                      </span>
-                      <span className="text-sm text-gray-800 dark:text-gray-200 flex-1">
-                        {valueObj.formatted || valueObj.value || 'N/A'}
-                        {valueObj.type === 'date' && (
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                            ({valueObj.type})
-                          </span>
-                        )}
+        <div className="space-y-3">
+          <p className="text-gray-800">{message.content}</p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-h-64 overflow-y-auto">
+            <div className="space-y-2">
+              {message.data.slice(0, 10).map((item, index) => (
+                <div key={index} className="bg-white border border-gray-200 rounded-md p-3 text-sm">
+                  {Object.entries(item).map(([key, value]) => (
+                    <div key={key} className="flex justify-between items-center py-1 border-b last:border-b-0 border-gray-100">
+                      <span className="font-medium text-gray-600 capitalize">{key}:</span>
+                      <span className="text-gray-800 max-w-xs truncate">
+                        {value?.formatted || value?.value || value || 'N/A'}
                       </span>
                     </div>
                   ))}
                 </div>
+              ))}
+              {message.data.length > 10 && (
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  Mostrando 10 de {message.data.length} resultados
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (message.data && typeof message.data === 'object' && !Array.isArray(message.data)) {
+      return (
+        <div className="space-y-3">
+          <p className="text-gray-800">{message.content}</p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            {Object.entries(message.data).map(([key, value]) => (
+              <div key={key} className="flex justify-between items-center py-2 border-b last:border-b-0 border-gray-200">
+                <span className="font-medium text-gray-600 capitalize">{key}:</span>
+                <span className="text-gray-800 max-w-xs truncate">
+                  {value?.formatted || value?.value || value || 'N/A'}
+                </span>
               </div>
             ))}
-            {data.length > 10 && (
-              <div className="p-3 text-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700">
-                Mostrando 10 de {data.length} resultados
+          </div>
+        </div>
+      );
+    }
+
+    return <p className="text-gray-800 whitespace-pre-wrap">{message.content}</p>;
+  };
+
+  const getMessageIcon = (message) => {
+    if (message.operation === 'database') return <Database className="w-4 h-4" />;
+    if (message.operation === 'email') return <Mail className="w-4 h-4" />;
+    if (message.success === false) return <XCircle className="w-4 h-4 text-red-500" />;
+    if (message.success === true) return <CheckCircle className="w-4 h-4 text-green-500" />;
+    if (message.requiresVerification) return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+    return <Bot className="w-4 h-4" />;
+  };
+
+  const getMessageBorderColor = (message) => {
+    if (message.success === false) return 'border-red-200 bg-red-50';
+    if (message.success === true) return 'border-green-200 bg-green-50';
+    if (message.requiresVerification) return 'border-yellow-200 bg-yellow-50';
+    return 'border-gray-200 bg-white';
+  };
+
+  return (
+    <>
+      {/* Contenedor principal que afecta al layout */}
+      <div style={chatStyles.mainContainer(isOpen)} className="chat-layout-container">
+        {/* Este div vacío es parte del truco para empujar el contenido */}
+      </div>
+      
+      {/* Botón flotante para abrir el chat cuando está cerrado */}
+      {!isOpen && (
+        <button
+          onClick={() => toggleChat(true)}
+          className="fixed bottom-6 right-6 z-50 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center animate-pulse-slow"
+          aria-label="Abrir asistente IA"
+          style={chatStyles.floatingButton}
+        >
+          <Bot className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Panel lateral del chat */}
+      <div 
+        style={chatStyles.chatPanel(isOpen)}
+        className={`fixed inset-y-0 right-0 w-96 bg-white shadow-2xl z-40 flex flex-col border-l border-gray-200`}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex items-center justify-between text-white">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-white/20 rounded-full">
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold">Asistente IA</h1>
+              <p className="text-xs text-blue-100">Base de datos y correos</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={clearChat}
+              className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+              title="Limpiar chat"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => toggleChat(false)}
+              className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+              title="Cerrar"
+              disabled={isAnimating}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div
+              className={`max-w-3xl rounded-lg border p-4 ${message.type === 'user'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : `${getMessageBorderColor(message)}`
+                }`}
+            >
+              <div className="flex items-start space-x-3">
+                <div className={`flex-shrink-0 ${message.type === 'user' ? 'text-blue-200' : 'text-gray-600'}`}>
+                  {message.type === 'user' ? <User className="w-4 h-4" /> : getMessageIcon(message)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  {message.type === 'user' ? (
+                    <p className="text-white">{message.content}</p>
+                  ) : (
+                    renderMessageContent(message)
+                  )}
+                  <div className="flex items-center justify-between mt-2">
+                    <span className={`text-xs ${message.type === 'user' ? 'text-blue-200' : 'text-gray-500'}`}>
+                      {formatTimestamp(message.timestamp)}
+                    </span>
+                    {message.type === 'bot' && (
+                      <button
+                        onClick={() => copyToClipboard(message.content)}
+                        className="p-1 text-gray-400 hover:text-gray-600 rounded transition-colors"
+                        title="Copiar mensaje"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
+            </div>
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 max-w-3xl">
+              <div className="flex items-center space-x-3">
+                <Bot className="w-4 h-4 text-gray-600" />
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
-      </div>
-    );
-  }
-
-  // Si es un único objeto
-  return (
-    <div className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
-      <div
-        className="bg-gray-50 dark:bg-gray-700 p-3 flex justify-between items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-        onClick={() => setExpanded(!expanded)}
-      >
-        <div className="flex items-center space-x-2">
-          <Database size={16} className="text-gray-600 dark:text-gray-400" />
-          <span className="font-medium text-gray-800 dark:text-gray-200">Detalles del registro</span>
+        <div ref={messagesEndRef} />
         </div>
-        {expanded ? <ChevronUp size={16} className="text-gray-600 dark:text-gray-400" /> : <ChevronDown size={16} className="text-gray-600 dark:text-gray-400" />}
-      </div>
 
-      {expanded && (
-        <div className="p-3">
-          <div className="grid gap-2">
-            {Object.entries(data).map(([key, valueObj]) => (
-              <div key={key} className="flex items-start">
-                <span className="text-xs font-medium text-gray-500 dark:text-gray-400 w-1/3 uppercase tracking-wide">
-                  {key.replace('_', ' ')}:
-                </span>
-                <span className="text-sm text-gray-800 dark:text-gray-200 flex-1">
-                  {valueObj.formatted || valueObj.value || 'N/A'}
-                  {valueObj.type === 'date' && (
-                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                      ({valueObj.type})
-                    </span>
-                  )}
-                </span>
-              </div>
-            ))}
+        {/* Verification Modal */}
+        {showVerification && (
+          <div className="mx-4 mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+            <div className="flex items-center space-x-2 mb-2">
+              <AlertTriangle className="w-4 h-4 text-yellow-600" />
+              <span className="font-medium text-sm text-yellow-800">Código de Verificación</span>
+            </div>
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ingresa el código"
+                className="flex-1 px-3 py-2 text-sm border border-yellow-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              />
+              <button
+                onClick={handleVerificationSubmit}
+                disabled={isLoading}
+                className="px-3 py-1 text-sm bg-yellow-600 text-white rounded-md hover:bg-yellow-700 disabled:opacity-50 transition-colors"
+              >
+                Verificar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Input */}
+        {!showVerification && (
+          <div className="bg-white border-t border-gray-200 p-4">
+          <div className="flex space-x-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Escribe tu consulta aquí..."
+              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              disabled={isLoading}
+            />
+            <button
+              onClick={() => handleSendMessage()}
+              disabled={isLoading || !inputMessage.trim()}
+              className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-1"
+            >
+              <Send className="w-3 h-3" />
+              <span className="text-sm">Enviar</span>
+            </button>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="mt-2 flex flex-wrap gap-1">
+            <button
+              onClick={() => setInputMessage('Muestra todos los proyectos activos')}
+              className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+            >
+              Ver proyectos
+            </button>
+            <button
+              onClick={() => setInputMessage('Cuenta cuántos usuarios hay registrados')}
+              className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+            >
+              Contar usuarios
+            </button>
+            <button
+              onClick={() => setInputMessage('Envía un correo a ejemplo@gmail.com')}
+              className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+            >
+              Enviar correo
+            </button>
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

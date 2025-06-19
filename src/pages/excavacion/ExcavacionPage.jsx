@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import Proyecto from './Proyecto';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useProyecto } from '@/context/ProyectoContext';
 import Excavacion from './Excavacion';
 import Anillo from './Anillo';
 import Sector from './Sector';
@@ -7,24 +8,29 @@ import Panel from './Panel';
 
 /**
  * Componente principal que orquesta la navegación entre los diferentes niveles jerárquicos:
- * Proyecto -> Excavación -> Anillo -> Sector -> Panel
+ * Excavación -> Anillo -> Sector -> Panel
  */
 const ExcavacionPage = () => {
   // Estado para controlar el nivel jerárquico actual
-  const [currentView, setCurrentView] = useState('proyectos'); // 'proyectos', 'excavaciones', 'anillos', 'sectores', 'paneles'
+  const [currentView, setCurrentView] = useState('excavaciones'); // 'excavaciones', 'anillos', 'sectores', 'paneles'
+
+  // Obtener el proyecto seleccionado del contexto
+  const { proyectoActual, cargando, cambiarProyecto } = useProyecto();
+  const navigate = useNavigate();
+
+  // Redirigir a la selección de proyecto si no hay ninguno seleccionado
+  useEffect(() => {
+    if (!cargando && !proyectoActual) {
+      navigate('/seleccion-proyecto');
+    }
+  }, [cargando, proyectoActual, navigate]);
 
   // Estados para almacenar las selecciones en cada nivel
-  const [selectedProyecto, setSelectedProyecto] = useState(null);
   const [selectedExcavacion, setSelectedExcavacion] = useState(null);
   const [selectedAnillo, setSelectedAnillo] = useState(null);
   const [selectedSector, setSelectedSector] = useState(null);
 
   // Manejadores para la navegación entre niveles
-  const handleSelectProyecto = (proyecto) => {
-    setSelectedProyecto(proyecto);
-    setCurrentView('excavaciones');
-  };
-
   const handleSelectExcavacion = (excavacion) => {
     setSelectedExcavacion(excavacion);
     setCurrentView('anillos');
@@ -38,14 +44,6 @@ const ExcavacionPage = () => {
   const handleSelectSector = (sector) => {
     setSelectedSector(sector);
     setCurrentView('paneles');
-  };
-
-  const handleBackToProyectos = () => {
-    setCurrentView('proyectos');
-    setSelectedProyecto(null);
-    setSelectedExcavacion(null);
-    setSelectedAnillo(null);
-    setSelectedSector(null);
   };
 
   const handleBackToExcavaciones = () => {
@@ -65,17 +63,44 @@ const ExcavacionPage = () => {
     setCurrentView('sectores');
     setSelectedSector(null);
   };
+  
+  // Manejador para cambiar de proyecto
+  const handleCambiarProyecto = () => {
+    cambiarProyecto();
+    navigate('/seleccion-proyecto');
+  };
 
   // Renderizar la vista actual según el nivel jerárquico
   const renderCurrentView = () => {
+    // Si está cargando o no hay proyecto seleccionado, mostrar mensaje
+    if (cargando) {
+      return (
+        <div className="flex items-center justify-center h-64">
+          <p className="text-slate-500">Cargando...</p>
+        </div>
+      );
+    }
+    
+    if (!proyectoActual) {
+      return (
+        <div className="flex flex-col items-center justify-center h-64 space-y-4">
+          <p className="text-slate-500">No hay proyecto seleccionado</p>
+          <button
+            onClick={handleCambiarProyecto}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Seleccionar Proyecto
+          </button>
+        </div>
+      );
+    }
+    
     switch (currentView) {
-      case 'proyectos':
-        return <Proyecto onSelectProyecto={handleSelectProyecto} />;
       case 'excavaciones':
         return (
           <Excavacion
-            proyecto={selectedProyecto}
-            onBack={handleBackToProyectos}
+            proyecto={proyectoActual}
+            onBack={handleCambiarProyecto}
             onSelectExcavacion={handleSelectExcavacion}
           />
         );
@@ -105,9 +130,14 @@ const ExcavacionPage = () => {
             }}
           />
         );
-      // Aquí se añadirían los casos para los demás niveles (sectores, paneles)
       default:
-        return <Proyecto onSelectProyecto={handleSelectProyecto} />;
+        return (
+          <Excavacion
+            proyecto={proyectoActual}
+            onBack={handleCambiarProyecto}
+            onSelectExcavacion={handleSelectExcavacion}
+          />
+        );
     }
   };
 

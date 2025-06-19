@@ -31,6 +31,8 @@ const PanelCard = ({ panel, onClick }) => {
             <h3 className="text-lg font-bold text-slate-800 mb-2">{panel?.nombre || 'Panel sin nombre'}</h3>
           </div>
 
+
+
           <div className="grid grid-cols-1 gap-3">
             <div className="flex items-center gap-2">
               <Ruler className="text-slate-400" size={16} />

@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
   // Estado del tema (light/dark)
   const [theme, setTheme] = useState(() => {
     // Verificar si hay tema guardado en localStorage
-    const savedTheme = localStorage.getItem('buildapp-theme');
+    const savedTheme = localStorage.getItem('c4-theme');
     if (savedTheme) {
       return savedTheme;
     }
@@ -28,7 +28,7 @@ export const AppProvider = ({ children }) => {
 
   // Estado de configuración global
   const [config, setConfig] = useState({
-    companyName: 'BuildApp',
+    companyName: 'C4 - Construccion',
     version: '1.0.0',
     language: 'es',
   });
@@ -37,7 +37,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const root = document.documentElement;
     root.setAttribute('data-theme', theme);
-    localStorage.setItem('buildapp-theme', theme);
+    localStorage.setItem('c4-theme', theme);
   }, [theme]);
 
   // Función para cambiar el tema

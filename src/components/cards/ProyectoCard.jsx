@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Users, Pencil } from 'lucide-react';
-import EditarProyecto from '../modales/EditarProyecto';
+import EditarProyecto from '@/components/modales/EditarProyecto';
 import { getStatusColor, getStatusIcon } from '@/utils/getEstadoCards';
 
 const ProyectoCard = ({ proyecto, onClick }) => {
@@ -14,7 +14,7 @@ const ProyectoCard = ({ proyecto, onClick }) => {
   return (
     <>
       <div
-        className="bg-white rounded-xl p-6 border border-slate-200 hover:shadow-lg transition-all cursor-pointer group"
+        className="bg-white rounded-xl p-6 border border-slate-300 hover:shadow-lg transition-all cursor-pointer group"
         onClick={onClick}
       >
         <div className="flex items-start justify-between mb-4">

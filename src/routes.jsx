@@ -8,6 +8,7 @@ import Demolicion from './pages/demolicion/Demolicion';
 import Construccion from './pages/construccion/Construccion';
 import ExcavacionPage from './pages/excavacion/ExcavacionPage';
 import Acabados from './pages/acabados/Acabados';
+import SeleccionProyecto from './pages/proyectos/SeleccionProyecto';
 
 export const router = createBrowserRouter([
   // Ruta raíz - redirige a login
@@ -26,7 +27,16 @@ export const router = createBrowserRouter([
       }
     ]
   },
-  // Rutas protegidas (requieren autenticación)
+  // Selección de proyecto (requiere autenticación)
+  {
+    path: '/seleccion-proyecto',
+    element: (
+      <ProtectedRoute>
+        <SeleccionProyecto />
+      </ProtectedRoute>
+    )
+  },
+  // Rutas protegidas (requieren autenticación y selección de proyecto)
   {
     path: '/dashboard',
     element: (

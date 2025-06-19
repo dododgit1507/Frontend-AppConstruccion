@@ -6,6 +6,19 @@ import EditarAnillo from '../modales/EditarAnillo';
 const AnilloCard = ({ anillo, onClick }) => {
   const [showEditModal, setShowEditModal] = useState(false);
 
+  // Obtener el progreso del anillo
+  const getProgreso = () => {
+    // El progreso ya viene calculado por el servicio
+    if (anillo.progreso !== undefined) {
+      return anillo.progreso;
+    }
+    
+    // Si no tiene progreso calculado, devolver 0
+    return 0;
+  };
+
+  const progreso = getProgreso();
+
   const handleEditarAnilloClick = (e) => {
     e.stopPropagation(); // Evitar que se propague el evento al contenedor padre
     setShowEditModal(true);
@@ -35,6 +48,17 @@ const AnilloCard = ({ anillo, onClick }) => {
         </div>
 
         <div className="space-y-3">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-slate-500">Progreso</span>
+            <span className="font-medium text-slate-700">{progreso}%</span>
+          </div>
+          <div className="w-full bg-slate-100 rounded-full h-2">
+            <div
+              className="bg-blue-500 h-2 rounded-full transition-all"
+              style={{ width: `${progreso}%` }}
+            ></div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-slate-500">Profundidad:</span>
