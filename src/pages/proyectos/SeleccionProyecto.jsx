@@ -61,13 +61,13 @@ const SeleccionProyecto = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              {/* <button
+              <button
               onClick={() => setOpenProyectoModal(true)}
               className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               <Plus size={18} />
               <span>Nuevo Proyecto</span>
-            </button> */}
+            </button>
             </div>
           </div>
 

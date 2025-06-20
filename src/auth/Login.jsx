@@ -28,9 +28,6 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       await loginUser(data);
-      toast.success("¡Bienvenido!", {
-        description: "Has iniciado sesión correctamente",
-      });
     } catch (error) {
       toast.error("Error al iniciar sesión", {
         description: error.message || "Verifica tus credenciales e intenta nuevamente",

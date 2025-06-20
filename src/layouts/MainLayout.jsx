@@ -32,7 +32,6 @@ const MainLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [chatOpen, setChatOpen] = useState(false);
-  const [showProyectoMenu, setShowProyectoMenu] = useState(false);
   const menuItems = [
     {
       title: 'Panel de Control',
@@ -63,6 +62,12 @@ const MainLayout = () => {
       icon: Paintbrush,
       path: '/dashboard/acabados',
       active: location.pathname === '/dashboard/acabados'
+    },
+    {
+      title: 'Administración',
+      icon: Settings,
+      path: '/dashboard/administracion',
+      active: location.pathname === '/dashboard/administracion'
     }
   ]; return (
     <div className="flex h-screen bg-theme-background">      {/* Overlay para móvil con transición */}
@@ -221,7 +226,7 @@ const MainLayout = () => {
                   <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-primary-light text-primary rounded-lg text-sm border border-primary/20">
                     <Building2 size={14} />
                     <span className="font-medium">{proyectoActual.nombre}</span>
-                    <button 
+                    <button
                       onClick={() => {
                         cambiarProyecto();
                         navigate('/seleccion-proyecto');

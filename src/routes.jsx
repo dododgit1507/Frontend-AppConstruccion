@@ -9,6 +9,10 @@ import Construccion from './pages/construccion/Construccion';
 import ExcavacionPage from './pages/excavacion/ExcavacionPage';
 import Acabados from './pages/acabados/Acabados';
 import SeleccionProyecto from './pages/proyectos/SeleccionProyecto';
+import Administracion from './pages/Administracion/Administracion';
+
+// Componentes de administración
+import Camiones from './components/administracion/Camiones';
 
 export const router = createBrowserRouter([
   // Ruta raíz - redirige a login
@@ -64,6 +68,14 @@ export const router = createBrowserRouter([
       {
         path: 'acabados',
         element: <Acabados />
+      },
+      {
+        path: 'administracion',
+        element: <Administracion />
+      },
+      {
+        path: 'administracion/camiones',
+        element: <Camiones />
       }
     ]
   },
