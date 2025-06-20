@@ -56,9 +56,9 @@ const RegistrarPanel = ({ sectorId, onClose }) => {
                 {errors.nombre && <ErrorMessage>{errors.nombre.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Area (m²)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" step="0.01" id="area" {...register("area", { required: "El area es obligatorio" })} />
-                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+                <label htmlFor="volumen">Volumen (m³)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" step="0.01" id="volumen" {...register("volumen", { required: "El volumen es obligatorio" })} />
+                {errors.volumen && <ErrorMessage>{errors.volumen.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
                 <label htmlFor="profundidad">Profundidad (m)</label>

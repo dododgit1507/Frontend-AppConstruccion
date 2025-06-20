@@ -53,14 +53,14 @@ const RegistrarSector = ({ anilloId, onClose }) => {
                 {errors.nombre && <ErrorMessage>{errors.nombre.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Área</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El área es obligatorio" })} />
-                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+                <label htmlFor="volumen">Volumen (m³)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="volumen" step="0.01" {...register("volumen", { required: "El volumen es obligatorio" })} />
+                {errors.volumen && <ErrorMessage>{errors.volumen.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Profundidad</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profunidad es obligatorio" })} />
-                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+                <label htmlFor="profundidad">Profundidad (m)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" step="0.01" {...register("profundidad", { required: "La profunidad es obligatorio" })} />
+                {errors.profudidad && <ErrorMessage>{errors.profudidad.message}</ErrorMessage>}
               </FormGroup>
             </div>
           </FormDivisor>

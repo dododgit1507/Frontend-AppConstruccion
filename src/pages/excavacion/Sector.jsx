@@ -44,7 +44,7 @@ const Sector = ({ anillo, onBack, onSelectSector }) => {
                 {anillo?.nombre} - Sectores
               </h1>
               <p className="text-slate-500">
-                Profundidad: {anillo?.profundidad}m • Área: {anillo?.area}m²
+                Profundidad: {anillo?.profundidad}m • Volumen: {anillo?.volumen}m³
               </p>
             </div>
           </div>

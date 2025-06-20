@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Ruler, Box, Layers, Square, Pencil } from 'lucide-react';
+import { Box, Layers, Square, Pencil } from 'lucide-react';
 import { getStatusColor } from '@/utils/getEstadoCards';
 import EditarPanel from '../modales/EditarPanel';
 
@@ -31,27 +31,18 @@ const PanelCard = ({ panel, onClick }) => {
             <h3 className="text-lg font-bold text-slate-800 mb-2">{panel?.nombre || 'Panel sin nombre'}</h3>
           </div>
 
-
-
           <div className="grid grid-cols-1 gap-3">
-            <div className="flex items-center gap-2">
-              <Ruler className="text-slate-400" size={16} />
-              <span className="text-sm text-slate-600">
-                Area: {panel?.area || '0'}m²
-              </span>
-            </div>
-
             <div className="flex items-center gap-2">
               <Box className="text-slate-400" size={16} />
               <span className="text-sm text-slate-600">
-                Profundidad: {panel?.profundidad || '0'}m
+                Profundidad: {panel?.profundidad || '0'} m
               </span>
             </div>
 
             <div className="flex items-center gap-2">
               <Layers className="text-slate-400" size={16} />
               <span className="text-sm text-slate-600">
-                Volumen: {panel?.area * panel?.profundidad || '0'}m³
+                Volumen: {panel?.volumen || '0'} m³
               </span>
             </div>
           </div>

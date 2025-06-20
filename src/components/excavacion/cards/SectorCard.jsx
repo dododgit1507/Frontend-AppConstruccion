@@ -65,8 +65,8 @@ const SectorCard = ({ sector, onClick }) => {
               <span className="font-medium text-slate-700 ml-1">{sector.profundidad} m</span>
             </div>
             <div>
-              <span className="text-slate-500">Área:</span>
-              <span className="font-medium text-slate-700 ml-1">{sector.area} m²</span>
+              <span className="text-slate-500">Volumen:</span>
+              <span className="font-medium text-slate-700 ml-1">{sector.volumen} m³</span>
             </div>
           </div>
 

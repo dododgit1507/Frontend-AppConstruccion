@@ -62,9 +62,9 @@ const RegistrarExcavacion = ({ proyectoId, onClose }) => {
                 {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Area (m2)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="area" {...register("area", { required: "El área es obligatoria" })} />
-                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+                <label htmlFor="volumen">Volumen (m³)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="volumen" {...register("volumen", { required: "El volumen es obligatorio" })} />
+                {errors.volumen && <ErrorMessage>{errors.volumen.message}</ErrorMessage>}
               </FormGroup>
             </div>
           </FormDivisor>

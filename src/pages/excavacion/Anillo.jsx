@@ -44,7 +44,7 @@ const Anillo = ({ excavacion, onBack, onSelectAnillo }) => {
                 {excavacion?.nombre} - Anillos
               </h1>
               <p className="text-slate-500">
-                Profundidad: {excavacion?.profundidad}m • Área: {excavacion?.area}m²
+                Profundidad: {excavacion?.profundidad}m • Volumen: {excavacion?.volumen}m³
               </p>
             </div>
           </div>

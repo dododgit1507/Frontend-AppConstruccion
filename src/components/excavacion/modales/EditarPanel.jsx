@@ -18,7 +18,7 @@ const EditarPanel = ({ panel, onClose }) => {
   const { register, handleSubmit, formState: { errors, isDirty } } = useForm({
     defaultValues: {
       nombre: panel.nombre,
-      area: panel.area,
+      volumen: panel.volumen,
       profundidad: panel.profundidad,
       estado: panel.estado,
     }
@@ -31,7 +31,7 @@ const EditarPanel = ({ panel, onClose }) => {
     // Convertir valores numéricos
     const panelData = {
       ...data,
-      area: parseFloat(data.area),
+      volumen: parseFloat(data.volumen),
       profundidad: parseFloat(data.profundidad),
       id_sector: panel.id_sector
     };
@@ -70,9 +70,9 @@ const EditarPanel = ({ panel, onClose }) => {
                 {errors.nombre && <ErrorMessage>{errors.nombre.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
-                <label htmlFor="area">Area (m²)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" step="0.01" id="area" {...register("area", { required: "El area es obligatorio" })} />
-                {errors.area && <ErrorMessage>{errors.area.message}</ErrorMessage>}
+                <label htmlFor="volumen">Volumen (m³)</label>
+                <input className="border border-slate-200 rounded-lg p-2" type="number" step="0.01" id="volumen" {...register("volumen", { required: "El volumen es obligatorio" })} />
+                {errors.volumen && <ErrorMessage>{errors.volumen.message}</ErrorMessage>}
               </FormGroup>
               <FormGroup>
                 <label htmlFor="profundidad">Profundidad (m)</label>

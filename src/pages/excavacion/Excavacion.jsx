@@ -66,7 +66,7 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
 
       {/* Información del proyecto */}
       <div className="bg-white rounded-xl p-6 border border-slate-200">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center">
             <p className="text-slate-500 text-sm">Estado</p>
             <p className="text-2xl font-bold text-slate-800 capitalize">{proyecto?.estado}</p>
@@ -76,12 +76,8 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
             <p className="text-2xl font-bold text-slate-800">{proyecto?.profundidad} m</p>
           </div>
           <div className="text-center">
-            <p className="text-slate-500 text-sm">Área</p>
-            <p className="text-2xl font-bold text-slate-800">{proyecto?.area} m²</p>
-          </div>
-          <div className="text-center">
             <p className="text-slate-500 text-sm">Volumen</p>
-            <p className="text-2xl font-bold text-slate-800">{proyecto?.profundidad * proyecto?.area} m³</p>
+            <p className="text-2xl font-bold text-slate-800">{proyecto?.area * proyecto?.profundidad} m³</p>
           </div>
           <div className="text-center">
             <p className="text-slate-500 text-sm">Residente</p>
