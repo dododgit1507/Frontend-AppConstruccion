@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Box, Layers, Square, Pencil } from 'lucide-react';
+import { Box, Layers, Square, Pencil, TrendingUp } from 'lucide-react';
 import { getStatusColor } from '@/utils/getEstadoCards';
 import EditarPanel from '../modales/EditarPanel';
+import { useNavigate } from 'react-router-dom';
 
 const PanelCard = ({ panel, onClick }) => {
   const [showEditarModal, setShowEditarModal] = useState(false);
+  const navigate = useNavigate();
 
   // Evitar la propagación del clic al editar
   const handleEditClick = (e) => {
@@ -53,10 +55,20 @@ const PanelCard = ({ panel, onClick }) => {
               <Square size={14} />
               <span>Panel</span>
             </div>
-            <div className="flex items-center space-x-1 text-sm text-blue-500">
+            <div className="flex items-center space-x-2 text-sm">
               <button
-                className='flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors'
-                onClick={handleEditClick}><Pencil size={16} /> Editar</button>
+                className='flex items-center gap-1 bg-green-500 text-white px-3 py-1.5 rounded-lg hover:bg-green-600 transition-colors'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/dashboard/excavacion/panel/${panel.id_panel}/avances`);
+                }}>
+                <TrendingUp size={14} /> Avances
+              </button>
+              <button
+                className='flex items-center gap-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition-colors'
+                onClick={handleEditClick}>
+                <Pencil size={14} /> Editar
+              </button>
             </div>
           </div>
         </div>

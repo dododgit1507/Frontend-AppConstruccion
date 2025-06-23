@@ -2,8 +2,8 @@ import api from "@/api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Claves para React Query
-const PANEL_QUERY_KEY = ["paneles"];
-const SECTOR_QUERY_KEY = ["sectores"];
+export const PANEL_QUERY_KEY = ["paneles"];
+export const SECTOR_QUERY_KEY = ["sectores"];
 
 const panelService = {
   // Métodos básicos CRUD

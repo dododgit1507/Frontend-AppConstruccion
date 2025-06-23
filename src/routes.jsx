@@ -10,6 +10,7 @@ import ExcavacionPage from './pages/excavacion/ExcavacionPage';
 import Acabados from './pages/acabados/Acabados';
 import SeleccionProyecto from './pages/proyectos/SeleccionProyecto';
 import Administracion from './pages/Administracion/Administracion';
+import AvancePanelView from './views/excavacion/AvancePanelView';
 
 // Componentes de administración
 import Camiones from './components/administracion/Camiones';
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
       {
         path: 'excavacion',
         element: <ExcavacionPage />
+      },
+      {
+        path: 'excavacion/panel/:panelId/avances',
+        element: <AvancePanelView />
       },
       {
         path: 'acabados',

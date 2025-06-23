@@ -88,7 +88,7 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
 
       {/* Dashboard de gráficos */}
       {!loading && excavacionesConProgreso.length > 0 && (
-        <ExcavacionDashboard excavaciones={excavacionesConProgreso} proyecto={proyecto} />
+        <ExcavacionDashboard excavaciones={excavacionesConProgreso} />
       )}
 
       {/* Lista de excavaciones */}

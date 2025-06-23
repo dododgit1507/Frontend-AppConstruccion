@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useProyecto } from '@/context/ProyectoContext';
 import Excavacion from './Excavacion';
 import Anillo from './Anillo';
 import Sector from './Sector';
 import Panel from './Panel';
+import AvancePanelView from '@/views/excavacion/AvancePanelView';
 
 /**
  * Componente principal que orquesta la navegación entre los diferentes niveles jerárquicos:
