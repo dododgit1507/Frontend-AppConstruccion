@@ -58,7 +58,7 @@ const Login = () => {
           <h1 className={`text-3xl font-bold ${
             theme === 'dark' ? 'text-white' : 'text-gray-900'
           }`}>
-            C4 - CONSTRUCTICON
+            LOGIN
           </h1>
           <p className={`text-sm mt-2 ${
             theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
@@ -207,20 +207,7 @@ const Login = () => {
 
         {/* Footer */}
         <div className="mt-8 text-center">
-          <p className={`text-sm ${
-            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-          }`}>
-            ¿No tienes una cuenta?{' '}
-            <button
-              type="button"
-              className={`font-medium hover:underline transition-colors ${
-                theme === 'dark' 
-                  ? 'text-primary-light hover:text-primary' 
-                  : 'text-primary hover:text-primary-dark'
-              }`}
-            >
-              Registrarse
-            </button>
+          <p>
           </p>
         </div>
       </div>

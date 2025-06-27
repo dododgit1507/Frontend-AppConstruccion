@@ -111,7 +111,7 @@ const MainLayout = () => {
           <div className="p-6 border-b border-slate-200">
             <div className="flex items-center justify-between">
               <div className="flex  items-center space-x-3">
-                <div className="w-14 h-14 flex items-center justify-center p-2 bg-black rounded-2xl">
+                <div className="w-14 h-14 flex items-center justify-center p-2 bg-blue-950 rounded-md">
                   <img 
                     src="/img/c4-logo.png" 
                     className="w-full h-full object-contain rounded-md" 
@@ -138,12 +138,12 @@ const MainLayout = () => {
             <div className="px-4 py-3 bg-blue-50 border border-blue-200 rounded-t-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="bg-blue-500 p-1.5 rounded-lg">
+                  <div className="bg-blue-800 p-1.5 rounded-lg">
                     <Building2 size={18} className="text-white" />
                   </div>
                   <div>
                     <p className="text-xs text-blue-600 font-medium">PROYECTO ACTUAL</p>
-                    <h3 className="text-sm font-bold text-blue-700 truncate max-w-[180px]">
+                    <h3 className="text-sm font-bold text-blue-800 truncate max-w-[180px]">
                       {proyectoActual ? proyectoActual.nombre : 'Sin proyecto'}
                     </h3>
                   </div>
@@ -168,7 +168,7 @@ const MainLayout = () => {
                       cambiarProyecto();
                       navigate('/seleccion-proyecto');
                     }}
-                    className="w-full py-1.5 px-3 cursor-pointer text-xs font-medium text-white bg-blue-500 hover:bg-blue-600 border border-blue-200 rounded-lg flex items-center justify-center gap-1 transition-colors"
+                    className="w-full py-1.5 px-3 cursor-pointer text-xs font-medium text-white bg-blue-800 hover:bg-blue-600 border border-blue-200 rounded-lg flex items-center justify-center gap-1 transition-colors"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 18l-6-6 6-6"/>
@@ -190,7 +190,7 @@ const MainLayout = () => {
                     to={item.path}
                     onClick={() => toggleSidebar()}
                     className={`flex items-center space-x-3 p-4 rounded-xl sidebar-item transition-all duration-200 ${item.active
-                      ? 'bg-blue-500 text-white shadow-xl'
+                      ? 'bg-blue-800 text-white shadow-xl'
                       : 'text-slate-600 hover:text-slate-800 hover:bg-slate-100'
                       }`}
                   >
@@ -212,7 +212,7 @@ const MainLayout = () => {
               className="flex items-center space-x-3 mb-4 p-3 w-full cursor-pointer bg-slate-50 hover:bg-blue-50 rounded-2xl border border-slate-200 transition-colors group"
             >
               <div className="relative">
-                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                <div className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center group-hover:bg-blue-600 transition-colors">
                   <User className="text-white" size={18} />
                 </div>
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
@@ -245,7 +245,7 @@ const MainLayout = () => {
       {/* Main Content - SIEMPRE OCUPA TODO EL ANCHO */}
       <div className={`flex-1 flex flex-col overflow-hidden relative transition-all duration-300 ${chatOpen ? 'mr-[420px]' : 'mr-0'}`}>
         {/* Header optimizado */}
-        <header className="from-blue-400 to-blue-600 bg-gradient-to-r backdrop-blur-xl border-b border-blue-500 px-6 py-4">
+        <header className="from-blue-950 to-blue-800 bg-gradient-to-r backdrop-blur-xl border-b border-blue-500 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button

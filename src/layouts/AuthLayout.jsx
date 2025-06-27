@@ -6,11 +6,7 @@ const AuthLayout = () => {
   const { theme } = useApp();
   
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-br from-primary via-primary-dark to-gray-900' 
-        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
-    }`}>
+    <div className={`min-h-screen flex items-center justify-center p-4 bg-blue-950`}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
@@ -27,25 +23,23 @@ const AuthLayout = () => {
       {/* Content Container */}
       <div className="relative z-10 w-full max-w-md">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className={`inline-flex items-center justify-center w-20 h-20 backdrop-blur-xl rounded-2xl border mb-6 ${
-            theme === 'dark'
-              ? 'bg-white/10 border-white/20'
-              : 'bg-white/80 border-primary/20 shadow-lg'
-          }`}>
-            <Building className={theme === 'dark' ? 'text-white' : 'text-primary'} size={40} />
+        <div className="text-center mb-6">
+          <div className="flex-col items-center justify-center gap-4">
+            <div className={`inline-flex items-center justify-center w-30 h-30 backdrop-blur-xl rounded-2xl mb-3`}>
+              <img src="public/img/c4-logo.png" alt="" />
+            </div>
+            <h1 className="text-4xl font-extrabold text-white">CONSTRUCTICON</h1>
           </div>
         </div>
+        
 
         {/* Auth Form */}
         <Outlet />
 
         {/* Footer */}
         <div className="text-center mt-8">
-          <p className={`text-sm ${
-            theme === 'dark' ? 'text-white/60' : 'text-gray-500'
-          }`}>
-            © 2025 BuildApp. Todos los derechos reservados.
+          <p className={`text-sm text-white`}>
+            © 2025 C4 Constructicon Todos los derechos reservados.
           </p>
         </div>
       </div>

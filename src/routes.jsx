@@ -9,12 +9,15 @@ import Construccion from './pages/construccion/Construccion';
 import ExcavacionPage from './pages/excavacion/ExcavacionPage';
 import Acabados from './pages/acabados/Acabados';
 import SeleccionProyecto from './pages/proyectos/SeleccionProyecto';
-import Administracion from './pages/Administracion/Administracion';
+import Administracion from './pages/administracion/Administracion';
 import AvancePanelView from './views/excavacion/AvancePanelView';
 import ConfiguracionUsuario from './pages/usuario/ConfiguracionUsuario';
 
 // Componentes de administración
 import Camiones from './components/administracion/Camiones';
+import Materiales from './components/administracion/Materiales';
+import Trabajadores from './components/administracion/Trabajadores';
+
 
 export const router = createBrowserRouter([
   // Ruta raíz - redirige a login
@@ -82,6 +85,14 @@ export const router = createBrowserRouter([
       {
         path: 'administracion/camiones',
         element: <Camiones />
+      },
+      {
+        path: 'administracion/materiales',
+        element: <Materiales />
+      },
+      {
+        path: 'administracion/trabajadores',
+        element: <Trabajadores />
       },
       {
         path: 'configuracion-usuario',

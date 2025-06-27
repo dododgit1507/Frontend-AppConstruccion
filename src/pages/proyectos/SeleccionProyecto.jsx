@@ -99,12 +99,12 @@ const SeleccionProyecto = () => {
   return (
     <div className="bg-gray-100 min-h-svh flex flex-col">
       {/* Navbar superior */}
-      <header className="from-blue-400 to-blue-600 bg-gradient-to-r  border-b border-slate-200 shadow-sm sticky top-0 z-10">
+      <header className="from-blue-950 to-blue-800 bg-gradient-to-r  border-b border-slate-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-4">
               <img src="/img/c4-logo.png" className="w-12 h-12 rounded-lg shadow-sm" alt="C4 Logo" />
-              <h1 className="text-2xl font-bold text-white">Constructicon</h1>
+              <h1 className="text-2xl font-bold text-white">CONSTRUCTICON</h1>
             </div>
             
             {/* Información del usuario */}
@@ -118,7 +118,7 @@ const SeleccionProyecto = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-              <Building2 className="text-blue-500" />
+              <Building2 className="text-blue-800" />
               Proyectos
             </h2>
             <div className="flex items-center gap-4 flex-wrap">
@@ -134,7 +134,7 @@ const SeleccionProyecto = () => {
               </div>
               <button
                 onClick={() => setOpenProyectoModal(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
+                className="flex items-center gap-2 px-5 py-2.5 bg-blue-800 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
               >
                 <Plus size={18} />
                 <span>Nuevo Proyecto</span>
@@ -144,7 +144,7 @@ const SeleccionProyecto = () => {
 
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <Loader2 className="animate-spin text-blue-500" size={32} />
+              <Loader2 className="animate-spin text-blue-800" size={32} />
               <span className="ml-3 font-medium text-slate-700">Cargando proyectos...</span>
             </div>
           ) : isError ? (
@@ -170,7 +170,7 @@ const SeleccionProyecto = () => {
               </p>
               <button
                 onClick={() => setOpenProyectoModal(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-800 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
               >
                 <Plus size={18} />
                 <span>Crear Primer Proyecto</span>

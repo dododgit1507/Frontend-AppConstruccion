@@ -140,7 +140,7 @@ const Excavacion = ({ proyecto, onBack, onSelectExcavacion }) => {
         {/* Header Principal */}
         <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden header-animation">
           {/* Barra superior con gradiente */}
-          <div className="bg-gradient-to-r from-blue-400 to-blue-600 p-6">
+          <div className="bg-gradient-to-r from-blue-950 to-blue-800 p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <button

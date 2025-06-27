@@ -20,7 +20,7 @@ const ProyectoCard = ({ proyecto, onClick, index = 0 }) => {
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-slate-800 group-hover:text-blue-500 transition-colors">
+            <h3 className="text-lg font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">
               {proyecto.nombre}
             </h3>
             <p className="text-slate-500 text-sm">
@@ -42,7 +42,7 @@ const ProyectoCard = ({ proyecto, onClick, index = 0 }) => {
           </div>
           <div className="w-full bg-slate-100 rounded-full h-2">
             <div
-              className="bg-blue-500 h-2 rounded-full transition-all"
+              className="bg-blue-800 h-2 rounded-full transition-all"
               style={{ width: `${proyecto.progreso}%` }}
             ></div>
           </div>
@@ -63,9 +63,9 @@ const ProyectoCard = ({ proyecto, onClick, index = 0 }) => {
               <Users size={14} />
               <span>Resp: {proyecto.responsable}</span>
             </div>
-            <div className="flex items-center space-x-1 text-sm text-blue-500">
+            <div className="flex items-center space-x-1 text-sm text-blue-800">
               <button
-                className='flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors'
+                className='flex items-center gap-2 bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors'
                 onClick={handleEditarProyectoClick}><Pencil size={16} /> Editar</button>
             </div>
           </div>
