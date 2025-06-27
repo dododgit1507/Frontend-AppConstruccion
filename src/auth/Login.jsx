@@ -58,7 +58,7 @@ const Login = () => {
           <h1 className={`text-3xl font-bold ${
             theme === 'dark' ? 'text-white' : 'text-gray-900'
           }`}>
-            BuildApp
+            C4 - CONSTRUCTICON
           </h1>
           <p className={`text-sm mt-2 ${
             theme === 'dark' ? 'text-gray-400' : 'text-gray-600'

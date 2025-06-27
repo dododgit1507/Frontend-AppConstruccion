@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Truck, Calendar, Timer, Volume2, Pencil, BrickWall, CloudSun, Image, MessageSquare } from 'lucide-react';
-import { formatearFechaInversa } from '@/utils/FormatoFecha';
+import { Truck, Calendar, Timer, Shovel, Pencil, BrickWall, CloudSun, Image, MessageSquare } from 'lucide-react';
+import { formatearFechaInversa, formatearHora } from '@/utils/FormatoFecha';
 import EditarAvancePanel from '../modales/EditarAvancePanel';
 
 const AvancePanelCard = ({ avance, onUpdate }) => {
@@ -19,7 +19,7 @@ const AvancePanelCard = ({ avance, onUpdate }) => {
           >
             <Pencil size={16} />
           </button>
-
+          
           {/* Fecha y hora destacadas */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 bg-blue-100 px-3 py-1.5 rounded-full">
@@ -31,7 +31,7 @@ const AvancePanelCard = ({ avance, onUpdate }) => {
             <div className="flex items-center gap-2 bg-indigo-100 px-3 py-1.5 rounded-full">
               <Timer className="text-indigo-600" size={16} />
               <span className="text-sm font-semibold text-indigo-800">
-                {avance.hora}
+                {formatearHora(avance.hora)}
               </span>
             </div>
           </div>
@@ -45,25 +45,25 @@ const AvancePanelCard = ({ avance, onUpdate }) => {
             <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
-                  <Volume2 className="text-blue-600" size={20} />
+                  <Shovel className="text-blue-600" size={20} />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Volumen</p>
-                  <p className="text-lg font-bold text-blue-800">{avance.volumen_removido} m³</p>
+                  <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">Volumen</p>
+                  <p className="text-sm font-bold text-blue-800">{avance.volumen_removido} m³</p>
                 </div>
               </div>
             </div>
 
             {/* Camión */}
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+            <div className="bg-slate-100 rounded-xl p-4 border border-slate-100">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-slate-200 rounded-lg">
                   <Truck className="text-slate-600" size={20} />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-slate-600 uppercase tracking-wide">Camión</p>
-                  <p className="text-lg font-semibold text-slate-800">
-                    {avance.camion?.placa || avance.id_camion || 'No disponible'}
+                  <p className="text-sm font-medium text-slate-600 uppercase tracking-wide">Camión</p>
+                  <p className="text-sm font-semibold text-slate-800">
+                    {avance.Camion?.placa || avance.id_camion || 'No disponible'}
                   </p>
                 </div>
               </div>

@@ -79,7 +79,7 @@ const ErrorBoundary = () => {
 
           {/* BuildApp Branding */}
           <div>
-            <h3 className="text-xl font-bold text-white mb-2">BuildApp</h3>
+            <h3 className="text-xl font-bold text-white mb-2">c4 CONSTRUCTICON</h3>
             <p className="text-white/60 text-sm">
               Sistema de Gestión de Construcción
             </p>

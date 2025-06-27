@@ -11,6 +11,7 @@ import Acabados from './pages/acabados/Acabados';
 import SeleccionProyecto from './pages/proyectos/SeleccionProyecto';
 import Administracion from './pages/Administracion/Administracion';
 import AvancePanelView from './views/excavacion/AvancePanelView';
+import ConfiguracionUsuario from './pages/usuario/ConfiguracionUsuario';
 
 // Componentes de administración
 import Camiones from './components/administracion/Camiones';
@@ -81,6 +82,10 @@ export const router = createBrowserRouter([
       {
         path: 'administracion/camiones',
         element: <Camiones />
+      },
+      {
+        path: 'configuracion-usuario',
+        element: <ConfiguracionUsuario />
       }
     ]
   },

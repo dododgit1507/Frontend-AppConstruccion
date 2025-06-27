@@ -49,21 +49,116 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8">
+      <style jsx>{`
+        @keyframes slideInFromTop {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInFromBottom {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInFromLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes slideInFromRight {
+          from {
+            opacity: 0;
+            transform: translateX(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .header-animation {
+          animation: slideInFromTop 0.6s ease-out;
+        }
+
+        .metrics-animation {
+          animation: slideInFromBottom 0.4s ease-out both;
+        }
+
+        .grid-animation {
+          animation: slideInFromLeft 0.5s ease-out both;
+        }
+
+        .chart-animation {
+          animation: scaleIn 0.4s ease-out both;
+        }
+
+        .section-animation {
+          animation: fadeIn 0.6s ease-out both;
+        }
+
+        .card-animation {
+          animation: slideInFromBottom 0.3s ease-out both;
+        }
+      `}</style>
+
       {/* Welcome Card */}
-      <div className="bg-primary-light p-6 rounded-2xl border border-primary/30">
+      <div className="bg-primary-light p-6 rounded-2xl border border-primary/30 header-animation">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-theme-text mb-2">Panel de Control - BuildApp</h1>
+            <h1 className="text-2xl font-bold text-theme-text mb-2">Panel de Control</h1>
             <p className="text-theme-text-secondary">Supervisión integral de proyectos de construcción</p>
-          </div>          <div className="hidden md:flex w-16 h-16 bg-primary rounded-xl items-center justify-center">
+          </div>
+          <div className="hidden md:flex w-16 h-16 bg-primary rounded-xl items-center justify-center">
             <Building className="text-white" size={32} />
           </div>
         </div>
       </div>
 
       {/* Métricas Principales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">        {/* Personal Activo */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-success transition-all card-hover">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Personal Activo */}
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-success transition-all card-hover metrics-animation"
+          style={{ animationDelay: '0.1s' }}
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-success-light rounded-xl">
               <Users className="text-success" size={24} />
@@ -78,8 +173,13 @@ const Dashboard = () => {
             <p className="text-3xl font-bold text-theme-text mb-1">20</p>
             <p className="text-xs text-success">✓ En operación</p>
           </div>
-        </div>        {/* Equipos en Uso */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-warning transition-all card-hover">
+        </div>
+
+        {/* Equipos en Uso */}
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-warning transition-all card-hover metrics-animation"
+          style={{ animationDelay: '0.2s' }}
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-warning-light rounded-xl">
               <Truck className="text-warning" size={24} />
@@ -94,8 +194,13 @@ const Dashboard = () => {
             <p className="text-3xl font-bold text-theme-text mb-1">0</p>
             <p className="text-xs text-warning">⚠ En operación</p>
           </div>
-        </div>        {/* Horas Trabajadas */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-info transition-all card-hover">
+        </div>
+
+        {/* Horas Trabajadas */}
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-info transition-all card-hover metrics-animation"
+          style={{ animationDelay: '0.3s' }}
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-info-light rounded-xl">
               <Clock className="text-info" size={24} />
@@ -114,8 +219,13 @@ const Dashboard = () => {
               <div className="timeline-point timeline-point-4"></div>
             </div>
           </div>
-        </div>        {/* Presupuesto Utilizado */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-primary transition-all card-hover metric-glow">
+        </div>
+
+        {/* Presupuesto Utilizado */}
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border hover:border-primary transition-all card-hover metric-glow metrics-animation"
+          style={{ animationDelay: '0.4s' }}
+        >
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-primary-light rounded-xl">
               <TrendingUp className="text-primary" size={24} />
@@ -138,8 +248,11 @@ const Dashboard = () => {
 
       {/* Grid Principal - 3 Columnas */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Columna 1: Estado de Permisos */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+        {/* Columna 1: Estado de Permisos */}
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid grid-animation"
+          style={{ animationDelay: '0.5s' }}
+        >
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-success-light rounded-lg">
               <FileCheck className="text-success" size={20} />
@@ -176,7 +289,10 @@ const Dashboard = () => {
         </div>
 
         {/* Columna 2: Instalaciones Campamento */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border grid-animation"
+          style={{ animationDelay: '0.6s' }}
+        >
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-info-light rounded-lg">
               <Home className="text-info" size={20} />
@@ -184,7 +300,8 @@ const Dashboard = () => {
             <h3 className="text-lg font-semibold text-theme-text">Instalaciones Campamento</h3>
           </div>
           
-          <div className="space-y-4">            <div className="flex items-center justify-between p-3 bg-info-light rounded-xl">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3 bg-info-light rounded-xl">
               <div className="flex items-center space-x-2">
                 <Zap className="text-info" size={16} />
                 <span className="text-info font-medium">Operativas</span>
@@ -214,7 +331,10 @@ const Dashboard = () => {
         </div>
 
         {/* Columna 3: Avance General */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border grid-animation"
+          style={{ animationDelay: '0.7s' }}
+        >
           <div className="flex items-center space-x-3 mb-6">
             <div className="p-2 bg-primary-light rounded-lg">
               <Activity className="text-primary" size={20} />
@@ -222,7 +342,8 @@ const Dashboard = () => {
             <h3 className="text-lg font-semibold text-theme-text">Avance General</h3>
           </div>
           
-          <div className="space-y-4">            {/* Demolición */}
+          <div className="space-y-4">
+            {/* Demolición */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
@@ -279,13 +400,18 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </div>      {/* Dashboard de Productividad en Tiempo Real */}
-      <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+      </div>
+
+      {/* Dashboard de Productividad en Tiempo Real */}
+      <div 
+        className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid chart-animation"
+        style={{ animationDelay: '0.8s' }}
+      >
         <ProductivityDashboardChart />
       </div>
 
       {/* Gráficos Profesionales de Ingeniería */}
-      <div className="space-y-6">
+      <div className="space-y-6 section-animation" style={{ animationDelay: '0.9s' }}>
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-theme-text flex items-center space-x-2">
             <BarChart3 className="text-primary" size={24} />
@@ -298,52 +424,83 @@ const Dashboard = () => {
         
         {/* Primera fila de gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.0s' }}
+          >
             <ProgressVsScheduleChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.1s' }}
+          >
             <ProductivityChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.2s' }}
+          >
             <QualityControlChart />
           </div>
         </div>
         
         {/* Segunda fila de gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.3s' }}
+          >
             <MaterialConsumptionChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.4s' }}
+          >
             <ResourcePlanningChart />
           </div>
         </div>
         
         {/* Tercera fila - Gráficos avanzados */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.5s' }}
+          >
             <SafetyChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.6s' }}
+          >
             <CostAnalysisChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.7s' }}
+          >
             <EquipmentEfficiencyChart />
           </div>
         </div>
-          {/* Cuarta fila - Análisis meteorológico y KPIs */}
+
+        {/* Cuarta fila - Análisis meteorológico y KPIs */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.8s' }}
+          >
             <WeatherImpactChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '1.9s' }}
+          >
             <KPIRadialChart />
           </div>
         </div>
       </div>
 
       {/* Gráficos Especializados de Construcción */}
-      <div className="space-y-6">
+      <div className="space-y-6 section-animation" style={{ animationDelay: '2.0s' }}>
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-theme-text flex items-center space-x-2">
             <Building className="text-warning" size={24} />
@@ -356,29 +513,48 @@ const Dashboard = () => {
         
         {/* Primera fila - Timeline y Equipos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid chart-animation"
+            style={{ animationDelay: '2.1s' }}
+          >
             <ConstructionTimelineChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '2.2s' }}
+          >
             <EquipmentUtilizationChart />
           </div>
         </div>
         
         {/* Segunda fila - Seguridad y Ambiente */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '2.3s' }}
+          >
             <SiteSafetyMetricsChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '2.4s' }}
+          >
             <EnvironmentalConditionsChart />
           </div>
         </div>
-          {/* Tercera fila - Materiales y Calidad */}
+
+        {/* Tercera fila - Materiales y Calidad */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '2.5s' }}
+          >
             <MaterialStockChart />
           </div>
-          <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+          <div 
+            className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+            style={{ animationDelay: '2.6s' }}
+          >
             <QualityCertificationChart />
           </div>
         </div>
@@ -386,8 +562,11 @@ const Dashboard = () => {
 
       {/* Gráficos de Seguimiento */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Progreso por Etapa */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid">
+        {/* Progreso por Etapa */}
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border engineering-grid chart-animation"
+          style={{ animationDelay: '2.7s' }}
+        >
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-info-light rounded-lg">
@@ -431,7 +610,10 @@ const Dashboard = () => {
         </div>
 
         {/* Seguimiento Presupuestario */}
-        <div className="bg-surface p-6 rounded-2xl border border-theme-border">
+        <div 
+          className="bg-surface p-6 rounded-2xl border border-theme-border chart-animation"
+          style={{ animationDelay: '2.8s' }}
+        >
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-primary-light rounded-lg">

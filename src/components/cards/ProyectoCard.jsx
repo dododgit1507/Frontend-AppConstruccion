@@ -3,19 +3,20 @@ import { Users, Pencil } from 'lucide-react';
 import EditarProyecto from '@/components/modales/EditarProyecto';
 import { getStatusColor, getStatusIcon } from '@/utils/getEstadoCards';
 
-const ProyectoCard = ({ proyecto, onClick }) => {
+const ProyectoCard = ({ proyecto, onClick, index = 0 }) => {
   const [showEditModal, setShowEditModal] = useState(false);
 
   const handleEditarProyectoClick = (e) => {
     e.stopPropagation(); // Evitar que se propague el evento al contenedor padre
     setShowEditModal(true);
   };
-
+   
   return (
     <>
       <div
-        className="bg-white rounded-xl p-6 border border-slate-300 hover:shadow-lg transition-all cursor-pointer group"
+        className="bg-white rounded-xl p-6 border border-slate-300 hover:shadow-lg transition-all cursor-pointer group duration-300 card-animation"
         onClick={onClick}
+        style={{ animationDelay: `${index * 100}ms` }}
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">

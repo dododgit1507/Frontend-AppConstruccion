@@ -1,5 +1,5 @@
-import api from "@/api/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "@/api/api";
 import panelService from "./panelService";
 
 // Claves para React Query

@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')).render(
             <RouterProvider router={router} />
             <Toaster
               richColors
-              position="top-center"
+              position="bottom-right"
               duration={3000}
             />
           </ProyectoProvider>

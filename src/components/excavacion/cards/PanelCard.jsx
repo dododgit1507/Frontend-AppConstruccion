@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Box, Layers, Square, Pencil, TrendingUp } from 'lucide-react';
-import { getStatusColor } from '@/utils/getEstadoCards';
 import EditarPanel from '../modales/EditarPanel';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,8 +21,9 @@ const PanelCard = ({ panel, onClick }) => {
       >
         {/* Indicador de estado */}
         <div className="absolute top-0 right-0 w-20 h-20">
-          <div className={`absolute transform rotate-45 text-xs font-medium py-1 right-[-35px] top-[32px] w-[170px] flex justify-center ${getStatusColor(panel?.estado)}`}>
-            {panel?.estado || 'Sin estado'}
+          <div className='absolute text-white transform rotate-45 text-xs font-medium py-1 right-[-35px] top-[32px] w-[170px] flex justify-center'
+            style={{ backgroundColor: panel?.Estado?.color_hex }}>
+            {panel?.Estado?.nombre || 'Sin estado'}
           </div>
         </div>
 
@@ -44,8 +44,30 @@ const PanelCard = ({ panel, onClick }) => {
             <div className="flex items-center gap-2">
               <Layers className="text-slate-400" size={16} />
               <span className="text-sm text-slate-600">
-                Volumen: {panel?.volumen || '0'} m³
+                Volumen: {panel?.volumen_proyectado || '0'} m³
               </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Layers className="text-slate-400" size={16} />
+              <span className="text-sm text-slate-600">
+                Fase: {panel?.Fase?.nombre || 'Sin estado'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Layers className="text-slate-400" size={16} />
+              <span className="text-sm text-slate-600">
+                Progreso: {panel?.Fase?.porcentaje_avance || '0'} %
+              </span>
+            </div>
+
+            {/* Barra de progreso */}
+            <div className="w-full h-2 bg-slate-200 rounded">
+              <div
+                className="h-full rounded bg-blue-500 transition-all duration-300"
+                style={{ width: `${panel?.Fase?.porcentaje_avance || 0}%` }}
+              ></div>
             </div>
           </div>
 
