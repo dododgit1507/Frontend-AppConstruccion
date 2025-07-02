@@ -23,6 +23,7 @@ const Panel = ({ sector, onBack, onSelectPanel }) => {
   } = panelService.usePanelesConProgresoQuery(sector?.id_sector);
   
   const handlePanelClick = (panel) => {
+    console.log('Panel.jsx - handlePanelClick:', panel);
     if (onSelectPanel) {
       onSelectPanel(panel);
     }
@@ -52,18 +53,8 @@ const Panel = ({ sector, onBack, onSelectPanel }) => {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setShowRegistrarModal(true)}
-                className="flex items-center space-x-2 px-5 py-2.5 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium shadow-sm"
-              >
-                <Plus size={16} />
-                <span>Nuevo Panel</span>
-              </button>
             </div>
           </div>
-
-          {/* Métricas del sector */}
-
         </div>
 
         {/* Navegación por pestañas */}
@@ -78,7 +69,7 @@ const Panel = ({ sector, onBack, onSelectPanel }) => {
               }`}
             >
               <Grid3X3 size={18} />
-              <span>Paneles </span>
+              <span>Paneles</span>
             </button>
             <button 
               onClick={() => setActiveTab('graficos')}
@@ -165,11 +156,10 @@ const Panel = ({ sector, onBack, onSelectPanel }) => {
                         key={panel.id_panel}
                         panel={panel}
                         onClick={() => handlePanelClick(panel)}
+                        onSelectPanel={onSelectPanel} // ✅ PASAR EL CALLBACK AQUÍ
                       />
                     ))}
                   </div>
-
-
                 </div>
               </div>
             )}

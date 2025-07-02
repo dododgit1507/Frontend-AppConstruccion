@@ -1,88 +1,122 @@
 import { useState } from 'react';
-import { Square, Pencil } from 'lucide-react';
-import { getStatusColor, getStatusIcon } from '@/utils/getEstadoCards';
+import { useNavigate } from 'react-router-dom';
+import { Square, Pencil, Shovel, HardHat, CheckCircle, Clock, AlertCircle, Activity } from 'lucide-react';
 import EditarSector from '../modales/EditarSector';
+import estadoService from '@/services/excavacion/estadoService';
 
-const SectorCard = ({ sector, onClick }) => {
+const SectorCard = ({ sector, onClick, onSelectSector }) => {
   const [showEditModal, setShowEditModal] = useState(false);
+  const navigate = useNavigate();
+  
+  // Obtener estados desde el servicio
+  const { data: estados } = estadoService.useEstadoQuery();
 
-  // Obtener el progreso del sector
-  const getProgreso = () => {
-    // El progreso ya viene calculado por el servicio
-    if (sector.progreso !== undefined) {
-      return sector.progreso;
+  // Función para obtener el fondo según el estado
+  const getEstadoBackground = (estado) => {
+    switch (estado?.toLowerCase()) {
+      case 'en proceso':
+        return 'bg-blue-50 border-blue-200 hover:bg-blue-100';
+      case 'finalizado':
+      case 'terminado':
+        return 'bg-green-50 border-green-200 hover:bg-green-100';
+      default:
+        return 'bg-slate-50 border-slate-200 hover:bg-slate-100';
     }
-    
-    // Si no tiene progreso calculado, devolver 0
-    return 0;
   };
 
-  const progreso = getProgreso();
+  // Función para obtener el ícono según el estado
+  const getEstadoIcon = (estado) => {
+    switch (estado?.toLowerCase()) {
+      case 'en proceso':
+        return <Activity size={20} className="text-blue-600" />;
+      case 'finalizado':
+      case 'terminado':
+        return <CheckCircle size={20} className="text-green-600" />;
+      default:
+        return <AlertCircle size={20} className="text-slate-600" />;
+    }
+  };
 
   const handleEditarSectorClick = (e) => {
-    e.stopPropagation(); // Evitar que se propague el evento al contenedor padre
+    e.stopPropagation(); 
     setShowEditModal(true);
   };
 
   return (
     <>
       <div
-        className="bg-white rounded-xl p-6 border border-slate-200 hover:shadow-lg transition-all cursor-pointer group"
+        className={`rounded-lg border transition-all cursor-pointer shadow-sm hover:shadow-md ${getEstadoBackground(sector.estado)}`}
         onClick={onClick}
       >
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-slate-800 group-hover:text-blue-500 transition-colors">
-              {sector.nombre}
-            </h3>
-            <p className="text-slate-500 text-sm">
-              ID: {sector.id_sector}
-            </p>
-          </div>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(sector.estado)}`}>
-            <div className="flex items-center space-x-1">
-              {getStatusIcon(sector.estado)}
-              <span className="capitalize">{sector.estado}</span>
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-gray-100">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h3 className="text-xl font-medium text-gray-900 mb-1">
+                {sector.nombre}
+              </h3>
+              <p className="text-sm text-gray-500 font-mono">
+                #{sector.id_sector}
+              </p>
             </div>
-          </span>
+            <div className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-gray-100 text-gray-700 border border-gray-200">
+              {getEstadoIcon(sector.estado)}
+              <span className="ml-2 capitalize">{sector.estado}</span>
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-500">Progreso</span>
-            <span className="font-medium text-slate-700">{progreso}%</span>
+        {/* Content */}
+        <div className="px-6 py-5">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <dt className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                Profundidad
+              </dt>
+              <dd className="text-2xl font-semibold text-gray-900">
+                {sector.profundidad}
+                <span className="text-sm font-normal text-gray-500 ml-1">m</span>
+              </dd>
+            </div>
+            <div className="space-y-1">
+              <dt className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                Volumen
+              </dt>
+              <dd className="text-2xl font-semibold text-gray-900">
+                {sector.volumen}
+                <span className="text-sm font-normal text-gray-500 ml-1">m³</span>
+              </dd>
+            </div>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2">
-            <div
-              className="bg-blue-500 h-2 rounded-full transition-all"
-              style={{ width: `${progreso}%` }}
-            ></div>
-          </div>
+        </div>
 
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-slate-500">Profundidad:</span>
-              <span className="font-medium text-slate-700 ml-1">{sector.profundidad} m</span>
-            </div>
-            <div>
-              <span className="text-slate-500">Volumen:</span>
-              <span className="font-medium text-slate-700 ml-1">{sector.volumen} m³</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-            <div className="flex items-center space-x-2 text-sm text-slate-500">
-              <Square size={14} />
-              <span>Sector</span>
-            </div>
-            <div className="flex items-center space-x-1 text-sm text-blue-500">
+        {/* Footer */}
+        <div className="px-6 py-4 bg-gray-50 rounded-b-lg border-t border-gray-100">
+          <div className="flex items-center justify-end">
+            <div className="flex gap-2">
               <button
-                className='flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors'
-                onClick={handleEditarSectorClick}><Pencil size={16} /> Editar</button>
+                className="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('Navegando a avances del sector:', sector.id_sector);
+                  navigate(`/dashboard/excavacion/sector/${sector.id_sector}/avances`);
+                }}
+              >
+                <Activity size={16} className="mr-1" />
+                Avances
+              </button>
+              <button
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                onClick={handleEditarSectorClick}
+              >
+                <Pencil size={16} className="mr-2" />
+                Editar
+              </button>
             </div>
           </div>
         </div>
       </div>
+
       {showEditModal && (
         <EditarSector
           sector={sector}

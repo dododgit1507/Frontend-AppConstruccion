@@ -30,15 +30,7 @@ const modulos = [
     icono: <Users size={32} />,
     color: 'bg-orange-500',
     ruta: '/dashboard/administracion/trabajadores'
-  },
-  {
-    id: 'supervisores',
-    nombre: 'Supervisores',
-    descripcion: 'Control de supervisores y jefes de obra',
-    icono: <HardHat size={32} />,
-    color: 'bg-purple-500',
-    ruta: '/dashboard/administracion/supervisores'
-  },
+  }
 ];
 
 const Administracion = () => {

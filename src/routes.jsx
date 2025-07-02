@@ -12,6 +12,8 @@ import SeleccionProyecto from './pages/proyectos/SeleccionProyecto';
 import Administracion from './pages/administracion/Administracion';
 import AvancePanelView from './views/excavacion/AvancePanelView';
 import ConfiguracionUsuario from './pages/usuario/ConfiguracionUsuario';
+import AvancesSectorPage from './pages/excavacion/AvancesSectorPage';
+
 
 // Componentes de administración
 import Camiones from './components/administracion/Camiones';
@@ -61,6 +63,10 @@ export const router = createBrowserRouter([
       {
         path: 'demolicion',
         element: <Demolicion />
+      },
+      {
+        path: 'excavacion/sector/:sectorId/avances',
+        element: <AvancesSectorPage />
       },
       {
         path: 'construccion',

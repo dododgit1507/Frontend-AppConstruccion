@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { X, Save } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query"; // AGREGADO
 // Componentes de UI
 import ModalContainer from "@/components/ui/ModalContainer";
 import Modal from "@/components/ui/Modal";
@@ -17,6 +18,8 @@ import estadoService from "@/services/excavacion/estadoService";
 import faseService from "@/services/excavacion/faseService";
 
 const EditarPanel = ({ panel, onClose }) => {
+  const queryClient = useQueryClient(); // AGREGADO
+  
   const { register, handleSubmit, formState: { errors, isDirty } } = useForm({
     defaultValues: {
       nombre: panel.nombre,
@@ -58,6 +61,10 @@ const EditarPanel = ({ panel, onClose }) => {
     }, {
       onSuccess: () => {
         toast.success("Panel actualizado exitosamente");
+        // AGREGADO: Invalidar queries para refrescar automáticamente
+        queryClient.invalidateQueries({ queryKey: ["paneles"] });
+        queryClient.invalidateQueries({ queryKey: ["sectores"] });
+        queryClient.invalidateQueries({ queryKey: ["anillos"] });
         onClose();
       },
       onError: (error) => {

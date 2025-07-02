@@ -14,60 +14,66 @@ const ProyectoCard = ({ proyecto, onClick, index = 0 }) => {
   return (
     <>
       <div
-        className="bg-white rounded-xl p-6 border border-slate-300 hover:shadow-lg transition-all cursor-pointer group duration-300 card-animation"
+        className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-all cursor-pointer shadow-sm hover:shadow-md"
         onClick={onClick}
         style={{ animationDelay: `${index * 100}ms` }}
       >
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">
-              {proyecto.nombre}
-            </h3>
-            <p className="text-slate-500 text-sm">
-              {proyecto.direccion}
-            </p>
-          </div>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(proyecto.estado)}`}>
-            <div className="flex items-center space-x-1">
-              {getStatusIcon(proyecto.estado)}
-              <span className="capitalize">{proyecto.estado}</span>
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-gray-100">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h3 className="text-xl font-medium text-gray-900 mb-1">
+                {proyecto.nombre}
+              </h3>
+              <p className="text-sm text-gray-500">
+                {proyecto.direccion}
+              </p>
             </div>
-          </span>
+            <div className={`inline-flex items-center px-3 py-1 rounded-md text-sm font-medium ${getStatusColor(proyecto.estado)}`}>
+              {getStatusIcon(proyecto.estado)}
+              <span className="ml-2 capitalize">{proyecto.estado}</span>
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-500">Progreso</span>
-            <span className="font-medium text-slate-700">{proyecto.progreso}%</span>
+        {/* Content */}
+        <div className="px-6 py-5">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <dt className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                Profundidad
+              </dt>
+              <dd className="text-2xl font-semibold text-gray-900">
+                {proyecto.profundidad}
+                <span className="text-sm font-normal text-gray-500 ml-1">m</span>
+              </dd>
+            </div>
+            <div className="space-y-1">
+              <dt className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                Área
+              </dt>
+              <dd className="text-2xl font-semibold text-gray-900">
+                {proyecto.area}
+                <span className="text-sm font-normal text-gray-500 ml-1">m²</span>
+              </dd>
+            </div>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2">
-            <div
-              className="bg-blue-800 h-2 rounded-full transition-all"
-              style={{ width: `${proyecto.progreso}%` }}
-            ></div>
-          </div>
+        </div>
 
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="text-slate-500">Profundidad:</span>
-              <span className="font-medium text-slate-700 ml-1">{proyecto.profundidad}m</span>
+        {/* Footer */}
+        <div className="px-6 py-4 bg-gray-50 rounded-b-lg border-t border-gray-100">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-sm text-gray-600">
+              <Users size={16} className="mr-2" />
+              <span className="font-medium">Resp: {proyecto.responsable}</span>
             </div>
-            <div>
-              <span className="text-slate-500">Área:</span>
-              <span className="font-medium text-slate-700 ml-1">{proyecto.area}m²</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-            <div className="flex items-center space-x-2 text-sm text-slate-500">
-              <Users size={14} />
-              <span>Resp: {proyecto.responsable}</span>
-            </div>
-            <div className="flex items-center space-x-1 text-sm text-blue-800">
-              <button
-                className='flex items-center gap-2 bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors'
-                onClick={handleEditarProyectoClick}><Pencil size={16} /> Editar</button>
-            </div>
+            <button
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              onClick={handleEditarProyectoClick}
+            >
+              <Pencil size={16} className="mr-2" />
+              Editar
+            </button>
           </div>
         </div>
       </div>
@@ -80,7 +86,5 @@ const ProyectoCard = ({ proyecto, onClick, index = 0 }) => {
     </>
   );
 };
-
-
 
 export default ProyectoCard;

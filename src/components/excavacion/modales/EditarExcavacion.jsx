@@ -1,15 +1,7 @@
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { X, Save } from "lucide-react";
-// Componentes de UI
-import ModalContainer from "@/components/ui/ModalContainer";
-import Modal from "@/components/ui/Modal";
-import Separador from "@/components/ui/Separador";
-import FormTitle from "@/components/ui/FormTitle";
-import FormSubtitle from "@/components/ui/FormSubtitle";
-import FormDivisor from "@/components/ui/FormDivisor";
-import FormGroup from "@/components/ui/FormGroup";
-import ErrorMessage from "@/components/ui/ErrorMessage";
+import { createPortal } from "react-dom";
 
 // Servicio de Excavacion
 import excavacionService from "@/services/excavacion/excavacionService";
@@ -40,79 +32,115 @@ const EditarExcavacion = ({ excavacion, onClose }) => {
     }
   }
 
-  return (
-    <ModalContainer>
-      <Modal>
-        <FormTitle>Editar Excavacion <X onClick={onClose} className="cursor-pointer" /></FormTitle>
-        <form onSubmit={handleSubmit((data) => onSubmit(excavacion.id_excavacion, data))} className="space-y-4">
-          <Separador />
-          <FormDivisor>
-            {/* Titulo */}
-            <div className="flex-1/2">
-              <FormSubtitle>Información General</FormSubtitle>
-            </div>
-            {/* Contenido */}
-            <div className="flex-1/2 space-y-2">
-              <FormGroup>
-                <label htmlFor="nombre">Nombre</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="text" id="nombre" {...register("nombre", { required: "El nombre es obligatorio" })} />
-                {errors.nombre && <ErrorMessage>{errors.nombre.message}</ErrorMessage>}
-              </FormGroup>
-              <FormGroup>
-                <label htmlFor="profundidad">Profundidad (m)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
-                {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
-              </FormGroup>
-              <FormGroup>
-                <label htmlFor="volumen">Volumen (m³)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="volumen" {...register("volumen", { required: "El volumen es obligatorio" })} />
-                {errors.volumen && <ErrorMessage>{errors.volumen.message}</ErrorMessage>}
-              </FormGroup>
-            </div>
-          </FormDivisor>
-          <FormDivisor>
-            <div className="flex-1/2">
-              <FormSubtitle>Estado de la Excavacion</FormSubtitle>
-            </div>
-            <div className="flex-1/2 space-y-2">
-              <FormGroup>
-                <label htmlFor="estado">Estado</label>
-                <select className="border border-slate-200 rounded-lg p-2" name="estado" id="estado" {...register("estado", { required: "El estado es obligatorio" })}>
+  // Portal simple sin componentes adicionales
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm">
+      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-4 pb-4 border-b">
+            <h2 className="text-xl font-semibold text-gray-900">Editar Excavacion</h2>
+            <button 
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          
+          <form onSubmit={handleSubmit((data) => onSubmit(excavacion.id_excavacion, data))} className="space-y-6">
+            {/* Información General */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Información General</h3>
+              </div>
+              
+              <div className="space-y-1">
+                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre</label>
+                <input 
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  type="text" 
+                  id="nombre" 
+                  {...register("nombre", { required: "El nombre es obligatorio" })} 
+                />
+                {errors.nombre && <p className="text-red-500 text-sm">{errors.nombre.message}</p>}
+              </div>
+
+              <div className="space-y-1">
+                <label htmlFor="profundidad" className="block text-sm font-medium text-gray-700">Profundidad (m)</label>
+                <input 
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  type="number" 
+                  step="0.01"
+                  id="profundidad" 
+                  {...register("profundidad", { required: "La profundidad es obligatoria" })} 
+                />
+                {errors.profundidad && <p className="text-red-500 text-sm">{errors.profundidad.message}</p>}
+              </div>
+
+              <div className="space-y-1">
+                <label htmlFor="volumen" className="block text-sm font-medium text-gray-700">Volumen (m³)</label>
+                <input 
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  type="number" 
+                  step="0.01"
+                  id="volumen" 
+                  {...register("volumen", { required: "El volumen es obligatorio" })} 
+                />
+                {errors.volumen && <p className="text-red-500 text-sm">{errors.volumen.message}</p>}
+              </div>
+
+              <div className="space-y-1">
+                <label htmlFor="estado" className="block text-sm font-medium text-gray-700">Estado</label>
+                <select 
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  id="estado" 
+                  {...register("estado", { required: "El estado es obligatorio" })}
+                >
                   <option value="">Seleccione un estado</option>
                   <option value="pendiente">Pendiente</option>
                   <option value="iniciada">Iniciada</option>
                   <option value="finalizada">Finalizada</option>
                 </select>
-                {errors.estado && <ErrorMessage>{errors.estado.message}</ErrorMessage>}
-              </FormGroup>
-            </div>
-          </FormDivisor>
-          <FormDivisor>
-            <div className="flex-1/2">
-              <FormSubtitle>Fechas</FormSubtitle>
-            </div>
-            <div className="flex-1/2 space-y-2">
-              <FormGroup>
-                <label htmlFor="fecha_inicio">Fecha de Inicio</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="date" id="fecha_inicio" {...register("fecha_inicio", { required: "La fecha de inicio es obligatoria" })} />
-                {errors.fecha_inicio && <ErrorMessage>{errors.fecha_inicio.message}</ErrorMessage>}
-              </FormGroup>
-            </div>
-          </FormDivisor>
-          <div className="flex flex-row justify-end gap-4">
-            <button type="button" className="bg-slate-100 text-slate-500 py-3 px-6 rounded-lg"
-              onClick={onClose}>
-              Cancelar
-            </button>
-            <button type="submit" disabled={isSubmitting || !isDirty} className="bg-blue-500 text-white py-3 px-6 rounded-lg">
-              <span className="flex items-center gap-2"><Save />{isSubmitting ? "Guardando..." : "Guardar"}</span>
-            </button>
-          </div>
-        </form>
-      </Modal>
-    </ModalContainer>
-  )
+                {errors.estado && <p className="text-red-500 text-sm">{errors.estado.message}</p>}
+              </div>
 
+              <div className="space-y-1">
+                <label htmlFor="fecha_inicio" className="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
+                <input 
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                  type="date" 
+                  id="fecha_inicio" 
+                  {...register("fecha_inicio", { required: "La fecha de inicio es obligatoria" })} 
+                />
+                {errors.fecha_inicio && <p className="text-red-500 text-sm">{errors.fecha_inicio.message}</p>}
+              </div>
+            </div>
+
+            {/* Botones */}
+            <div className="flex justify-end gap-3 pt-4 border-t">
+              <button 
+                type="button" 
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                onClick={onClose}
+              >
+                Cancelar
+              </button>
+              <button 
+                type="submit" 
+                disabled={isSubmitting || !isDirty} 
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              >
+                <Save size={16} />
+                {isSubmitting ? "Guardando..." : "Guardar"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
 }
 
 export default EditarExcavacion

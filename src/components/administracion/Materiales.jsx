@@ -3,11 +3,11 @@ import { Plus, Loader2, AlertCircle } from 'lucide-react';
 
 // Componentes
 import SearchBar from '@/components/ui/SearchBar';
-import CamionCard from '@/components/cards/MaterialCard';
-import RegistrarCamion from '@/components/modales/RegistrarCamion';
+import MaterialCard from '@/components/cards/MaterialCard';
+import RegistraMaterial from '@/components/modales/RegistraMaterial';
 
 // Servicios
-import camionService from '@/services/camionService';
+import materialService from '@/services/materialService';
 
 import { useProyecto } from '@/context/ProyectoContext';
 
@@ -26,14 +26,13 @@ const Materiales = () => {
     isLoading,
     isError,
     error
-  } = camionService.useGetCamiones();
+  } = materialService.useGetMateriales();
 
   // Filtrar camiones según término de búsqueda
-  const camionesFiltrados = camiones?.filter(camion =>
-    camion.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    camion.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    camion.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    camion.tipo_camion.toLowerCase().includes(searchTerm.toLowerCase())
+  const camionesFiltrados = camiones?.filter( material =>
+    material.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    material.tipo_material.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    material.unidad_medida.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
   // Manejar apertura del modal para crear un nuevo camión
@@ -85,10 +84,10 @@ const Materiales = () => {
         </div>
       ) : camionesFiltrados.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {camionesFiltrados.map((camion) => (
-            <CamionCard
-              key={camion.id_camion}
-              camion={camion}
+          {camionesFiltrados.map((material) => (
+            <MaterialCard
+              key={material.id_material}
+              material={material}
             />
           ))}
         </div>
@@ -109,7 +108,7 @@ const Materiales = () => {
       
       {/* Modal para crear/editar camión */}
       {showModal && (
-        <RegistrarCamion 
+        <RegistraMaterial 
           onClose={handleCloseModal} 
         />
       )}

@@ -16,7 +16,11 @@ import sectorService from "@/services/excavacion/sectorService";
 
 const RegistrarSector = ({ anilloId, onClose }) => {
 
-  const { register, handleSubmit, formState: { errors, isDirty } } = useForm();
+  const { register, handleSubmit, formState: { errors, isDirty } } = useForm({
+    defaultValues: {
+      estado: 'en proceso' // Valor por defecto
+    }
+  });
 
   // Mutación con React Query
   const { mutate, isPending } = sectorService.useSectorCreateMutation();
@@ -59,8 +63,8 @@ const RegistrarSector = ({ anilloId, onClose }) => {
               </FormGroup>
               <FormGroup>
                 <label htmlFor="profundidad">Profundidad (m)</label>
-                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" step="0.01" {...register("profundidad", { required: "La profunidad es obligatorio" })} />
-                {errors.profudidad && <ErrorMessage>{errors.profudidad.message}</ErrorMessage>}
+                <input className="border border-slate-200 rounded-lg p-2" type="number" id="profundidad" step="0.01" {...register("profundidad", { required: "La profundidad es obligatoria" })} />
+                {errors.profundidad && <ErrorMessage>{errors.profundidad.message}</ErrorMessage>}
               </FormGroup>
             </div>
           </FormDivisor>
@@ -74,9 +78,8 @@ const RegistrarSector = ({ anilloId, onClose }) => {
               <FormGroup>
                 <label htmlFor="estado">Estado</label>
                 <select className="border border-slate-200 rounded-lg p-2" name="estado" id="estado" {...register("estado", { required: "El estado es obligatorio" })}>
-                  <option value="pendiente">Pendiente</option>
-                  <option value="iniciada">Iniciada</option>
-                  <option value="finalizada">Finalizada</option>
+                  <option value="en proceso">En Proceso</option>
+                  <option value="finalizado">Finalizado</option>
                 </select>
                 {errors.estado && <ErrorMessage>{errors.estado.message}</ErrorMessage>}
               </FormGroup>

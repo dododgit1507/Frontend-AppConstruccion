@@ -3,11 +3,11 @@ import { Plus, Loader2, AlertCircle } from 'lucide-react';
 
 // Componentes
 import SearchBar from '@/components/ui/SearchBar';
-import CamionCard from '@/components/cards/MaterialCard';
-import RegistrarCamion from '@/components/modales/RegistrarCamion';
+import TrabajadorCard from '@/components/cards/TrabajadorCard';
+import RegistrarTrabajador from '@/components/modales/RegistrarTrabajador';
 
 // Servicios
-import camionService from '@/services/camionService';
+import trabajadorService from '@/services/trabajadorService';
 
 import { useProyecto } from '@/context/ProyectoContext';
 
@@ -22,18 +22,18 @@ const Trabajadores = () => {
 
   // Consulta de camiones con React Query
   const {
-    data: camiones,
+    data: trabajadores,
     isLoading,
     isError,
     error
-  } = camionService.useGetCamiones();
+  } = trabajadorService.useGetTrabajadores();
 
   // Filtrar camiones según término de búsqueda
-  const camionesFiltrados = camiones?.filter(camion =>
-    camion.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    camion.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    camion.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    camion.tipo_camion.toLowerCase().includes(searchTerm.toLowerCase())
+  const trabajadoresFiltrados = trabajadores?.filter(trabajador =>
+    trabajador.id_trabajador.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    trabajador.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    trabajador.correo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    trabajador.telefono.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
   // Manejar apertura del modal para crear un nuevo camión
@@ -58,7 +58,7 @@ const Trabajadores = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="w-full md:w-1/2 lg:w-1/3">
           <SearchBar
-            placeholder="Buscar material por nombre, tipo o unidad..."
+            placeholder="Buscar trabajador por nombre, correo o teléfono..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -68,7 +68,7 @@ const Trabajadores = () => {
           className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
           <Plus size={18} />
-          <span>Agregar Material</span>
+          <span>Agregar Trabajador</span>
         </button>
       </div>
       
@@ -76,40 +76,40 @@ const Trabajadores = () => {
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
           <Loader2 className="animate-spin" size={32} />
-          <span className="ml-2">Cargando camiones...</span>
+          <span className="ml-2">Cargando trabajadores...</span>
         </div>
       ) : isError ? (
         <div className="bg-red-50 p-4 rounded-lg flex items-center text-red-500">
           <AlertCircle className="mr-2" size={20} />
-          Error al cargar los camiones: {error?.message || 'Error desconocido'}
+          Error al cargar los trabajadores: {error?.message || 'Error desconocido'}
         </div>
-      ) : camionesFiltrados.length > 0 ? (
+      ) : trabajadoresFiltrados.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {camionesFiltrados.map((camion) => (
-            <CamionCard
-              key={camion.id_camion}
-              camion={camion}
+          {trabajadoresFiltrados.map((trabajador) => (
+            <TrabajadorCard
+              key={trabajador.id_trabajador}
+              trabajador={trabajador}
             />
           ))}
         </div>
       ) : (
         <div className="bg-slate-50 p-8 rounded-lg text-center">
           <p className="text-slate-500 text-lg mb-4">
-            {searchTerm ? 'No se encontraron camiones que coincidan con la búsqueda.' : 'No hay camiones registrados.'}
+            {searchTerm ? 'No se encontraron trabajadores que coincidan con la búsqueda.' : 'No hay trabajadores registrados.'}
           </p>
           <button
             onClick={handleOpenCreateModal}
             className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
             <Plus size={16} />
-            <span>Registrar Primer Camión</span>
+            <span>Registrar Primer Trabajador</span>
           </button>
         </div>
       )}
       
-      {/* Modal para crear/editar camión */}
+      {/* Modal para crear/editar trabajador */}
       {showModal && (
-        <RegistrarCamion 
+        <RegistrarTrabajador  
           onClose={handleCloseModal} 
         />
       )}

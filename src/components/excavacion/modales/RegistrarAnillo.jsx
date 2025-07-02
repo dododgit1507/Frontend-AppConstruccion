@@ -25,7 +25,6 @@ const RegistrarAnillo = ({ excavacionId, onClose }) => {
     try {
       await anilloCreateMutation.mutateAsync({ ...data, id_excavacion: excavacionId })
       toast.success("Anillo registrado exitosamente")
-      onClose();
     } catch (error) {
       console.error(error);
       toast.error("Error al crear el anillo");

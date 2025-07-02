@@ -86,9 +86,8 @@ const EditarSector = ({ sector, onClose }) => {
               <FormGroup>
                 <label htmlFor="estado">Estado</label>
                 <select className="border border-slate-200 rounded-lg p-2" name="estado" id="estado" {...register("estado", { required: "El estado es obligatorio" })}>
-                  <option value="pendiente">Pendiente</option>
-                  <option value="iniciada">Iniciada</option>
-                  <option value="finalizada">Finalizada</option>
+                  <option value="en proceso">En Proceso</option>
+                  <option value="finalizado">Finalizado</option>
                 </select>
                 {errors.estado && <ErrorMessage>{errors.estado.message}</ErrorMessage>}
               </FormGroup>

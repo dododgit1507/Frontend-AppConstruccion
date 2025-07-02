@@ -52,13 +52,6 @@ const Sector = ({ anillo, onBack, onSelectSector }) => {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setShowRegistrarModal(true)}
-                className="flex items-center space-x-2 px-5 py-2.5 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium shadow-sm"
-              >
-                <Plus size={16} />
-                <span>Nuevo Sector</span>
-              </button>
             </div>
           </div>
 

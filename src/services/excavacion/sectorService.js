@@ -34,6 +34,16 @@ const sectorService = {
   },
 
   /**
+   * Verifica y actualiza automáticamente el estado del sector basado en sus paneles
+   * @param {string} id - ID del sector
+   * @returns {Promise<Object>} - Resultado de la verificación
+   */
+  verificarEstado: async (id) => {
+    const response = await api.post(`/excavacion/sector/${id}/verificar-estado`);
+    return response.data;
+  },
+
+  /**
    * Calcula el progreso de un sector basado en sus paneles
    * @param {Array} paneles - Lista de paneles del sector
    * @returns {number} - Porcentaje de progreso (0-100)
@@ -134,6 +144,32 @@ const sectorService = {
         // Invalidar consultas relacionadas para actualizar la UI
         queryClient.invalidateQueries({ queryKey: SECTOR_QUERY_KEY });
         queryClient.invalidateQueries({ queryKey: ANILLO_QUERY_KEY });
+      }
+    });
+  },
+
+  /**
+   * Hook para verificar automáticamente el estado de un sector
+   * @returns {UseMutationResult} - Mutación para verificar estado
+   */
+  useVerificarEstadoMutation: () => {
+    const queryClient = useQueryClient();
+    
+    return useMutation({
+      mutationFn: (sectorId) => sectorService.verificarEstado(sectorId),
+      onSuccess: (data, sectorId) => {
+        // Invalidar consultas relacionadas para actualizar la UI
+        queryClient.invalidateQueries({ queryKey: SECTOR_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: ANILLO_QUERY_KEY });
+        queryClient.invalidateQueries({ queryKey: ['paneles'] });
+        
+        // Mostrar mensaje de éxito si se actualizó el estado
+        if (data.actualizado) {
+          console.log(`Sector ${sectorId}: ${data.mensaje}`);
+        }
+      },
+      onError: (error, sectorId) => {
+        console.error(`Error al verificar estado del sector ${sectorId}:`, error);
       }
     });
   }
