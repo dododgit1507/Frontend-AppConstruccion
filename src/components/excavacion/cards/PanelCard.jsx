@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Edit2, 
   Activity, 
-  Calendar, 
-  BarChart3, 
-  MapPin,
-  ChevronRight,
   CheckCircle,
   Pause,
   X,
-  AlertTriangle
+  AlertTriangle,
+  Clock,
+  Layers,
+  Hash,
+  MapPin
 } from 'lucide-react';
 import EditarPanel from '../modales/EditarPanel';
 
@@ -22,15 +22,23 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
   const getPanelStatusBackground = (estadoNombre) => {
     switch (estadoNombre?.toLowerCase()) {
       case 'finalizado':
+      case 'completado':
         return 'bg-green-50 border-green-200 hover:bg-green-100';
       case 'activo':
+      case 'en_proceso':
+      case 'en proceso':
         return 'bg-blue-50 border-blue-200 hover:bg-blue-100';
       case 'pausado':
+      case 'suspendido':
         return 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100';
       case 'cancelado':
+      case 'rechazado':
         return 'bg-red-50 border-red-200 hover:bg-red-100';
-      default:
+      case 'pendiente':
+      case 'planificado':
         return 'bg-gray-50 border-gray-200 hover:bg-gray-100';
+      default:
+        return 'bg-slate-50 border-slate-200 hover:bg-slate-100';
     }
   };
 
@@ -38,15 +46,23 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
   const getPanelStatusBadge = (estadoNombre) => {
     switch (estadoNombre?.toLowerCase()) {
       case 'finalizado':
+      case 'completado':
         return 'bg-green-100 text-green-700 border-green-200';
       case 'activo':
+      case 'en_proceso':
+      case 'en proceso':
         return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'pausado':
+      case 'suspendido':
         return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       case 'cancelado':
+      case 'rechazado':
         return 'bg-red-100 text-red-700 border-red-200';
-      default:
+      case 'pendiente':
+      case 'planificado':
         return 'bg-gray-100 text-gray-700 border-gray-200';
+      default:
+        return 'bg-slate-100 text-slate-700 border-slate-200';
     }
   };
 
@@ -54,13 +70,21 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
   const getPanelStatusIcon = (estadoNombre) => {
     switch (estadoNombre?.toLowerCase()) {
       case 'finalizado':
+      case 'completado':
         return <CheckCircle size={16} />;
       case 'activo':
+      case 'en_proceso':
+      case 'en proceso':
         return <Activity size={16} />;
       case 'pausado':
+      case 'suspendido':
         return <Pause size={16} />;
       case 'cancelado':
+      case 'rechazado':
         return <X size={16} />;
+      case 'pendiente':
+      case 'planificado':
+        return <Clock size={16} />;
       default:
         return <AlertTriangle size={16} />;
     }
@@ -68,16 +92,11 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
 
   // Función para manejar el click en el botón de avances
   const handleAvancesClick = (e) => {
-    e.stopPropagation(); // Evitar que se dispare el onClick del card
-    console.log('PanelCard - handleAvancesClick:', panel);
+    e.stopPropagation();
     
     if (onSelectPanel) {
-      // Si hay callback jerárquico, usarlo (flujo interno)
-      console.log('Usando callback jerárquico para avances');
       onSelectPanel(panel);
     } else {
-      // Si no hay callback, usar navegación por URL (fallback)
-      console.log('Usando navegación por URL para avances');
       navigate(`/dashboard/excavacion/panel/${panel.id_panel}/avances`);
     }
   };
@@ -88,91 +107,158 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
     setShowEditarModal(true);
   };
 
-  console.log('=== DATOS COMPLETOS DEL PANEL ===');
-  console.log('Panel completo:', panel);
-  console.log('Volumen desde panel.volumen:', panel.volumen);
-  console.log('Volumen desde panel.volumen_proyectado:', panel.volumen_proyectado);
-  console.log('Profundidad desde panel.profundidad:', panel.profundidad);
-  console.log('Todas las propiedades del panel:', Object.keys(panel));
-
   return (
     <>
       <div 
-        className={`rounded-lg border transition-all cursor-pointer shadow-sm hover:shadow-md ${getPanelStatusBackground(panel.Estado?.nombre)}`}
+        className={`rounded-xl border-2 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-lg transform hover:-translate-y-1 ${getPanelStatusBackground(panel.Estado?.nombre)}`}
         onClick={onClick}
       >
-        {/* Header */}
+        {/* Header con estado prominente */}
         <div className="px-6 py-4 border-b border-gray-100">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <h3 className="text-xl font-medium text-gray-900 mb-1">
+              <h3 className="text-xl font-bold text-gray-900 mb-1">
                 {panel.nombre}
               </h3>
-              <p className="text-sm text-gray-500 font-mono">
-                #{panel.id_panel}
+              <p className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded">
+                ID: {panel.id_panel}
               </p>
             </div>
-            <div className={`inline-flex items-center px-3 py-1 rounded-md text-sm font-medium border ${getPanelStatusBadge(panel.Estado?.nombre)}`}>
+            <div className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-semibold border-2 shadow-sm ${getPanelStatusBadge(panel.Estado?.nombre)}`}>
               {getPanelStatusIcon(panel.Estado?.nombre)}
-              <span className="ml-2 capitalize">{panel.Estado?.nombre || 'Sin estado'}</span>
+              <span className="ml-2 capitalize">
+                {panel.Estado?.nombre || 'Sin estado'}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Content */}
+        {/* Content con datos reales */}
         <div className="px-6 py-5">
           {/* Métricas principales */}
-          <div className="grid grid-cols-2 gap-6 mb-6">
-            <div className="space-y-1">
-              <dt className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
+              <dt className="flex items-center text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                <Layers size={14} className="mr-1" />
                 Volumen
               </dt>
-              <dd className="text-2xl font-semibold text-gray-900">
-                {panel.volumen_proyectado || 0}
+              <dd className="text-2xl font-bold text-gray-900">
+                {parseFloat(panel.volumen_proyectado || 0).toFixed(2)}
                 <span className="text-sm font-normal text-gray-500 ml-1">m³</span>
               </dd>
             </div>
-            <div className="space-y-1">
-              <dt className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+
+            <div className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
+              <dt className="flex items-center text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                <Layers size={14} className="mr-1" />
                 Profundidad
               </dt>
-              <dd className="text-2xl font-semibold text-gray-900">
-                {panel.profundidad || 0}
+              <dd className="text-2xl font-bold text-gray-900">
+                {parseFloat(panel.profundidad || 0).toFixed(2)}
                 <span className="text-sm font-normal text-gray-500 ml-1">m</span>
               </dd>
             </div>
           </div>
 
-          {/* Información adicional */}
-          <div className="space-y-3 mb-6">
-            {panel.fase_actual && (
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                <span className="text-sm font-medium text-gray-500">Fase Actual</span>
-                <span className="text-sm text-gray-900">{panel.fase_actual}</span>
+          {/* Información técnica específica */}
+          <div className="space-y-4 mb-6">
+            {/* Fase asignada (sin porcentajes) */}
+            {panel.Fase && (
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Fase Asignada</span>
+                    <p className="text-sm font-bold text-blue-900">{panel.Fase.nombre}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs text-blue-600">Estado</span>
+                    <p className="text-sm font-bold text-blue-900">Configurada</p>
+                  </div>
+                </div>
               </div>
             )}
 
-            {panel.fecha_inicio && (
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                <span className="text-sm font-medium text-gray-500">Fecha de Inicio</span>
-                <span className="text-sm text-gray-900">
-                  {new Date(panel.fecha_inicio).toLocaleDateString()}
+            {/* Información técnica del panel */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* ID de Sector */}
+              <div className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-lg border">
+                <div className="flex items-center">
+                  <MapPin size={14} className="text-gray-500 mr-2" />
+                  <span className="text-xs font-medium text-gray-500">Sector</span>
+                </div>
+                <span className="text-sm font-bold text-gray-900 font-mono">
+                  {panel.id_sector}
                 </span>
               </div>
-            )}
 
-            {panel.progreso !== undefined && (
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-500">Progreso</span>
-                  <span className="text-sm font-medium text-gray-900">{panel.progreso || 0}%</span>
+              {/* ID de Fase */}
+              <div className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-lg border">
+                <div className="flex items-center">
+                  <Hash size={14} className="text-gray-500 mr-2" />
+                  <span className="text-xs font-medium text-gray-500">Fase ID</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <span className="text-sm font-bold text-gray-900 font-mono">
+                  {panel.id_fase}
+                </span>
+              </div>
+
+              {/* Área calculada */}
+              <div className="flex items-center justify-between py-3 px-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center">
+                  <Layers size={14} className="text-blue-600 mr-2" />
+                  <span className="text-xs font-medium text-blue-600">Área Calc.</span>
+                </div>
+                <span className="text-sm font-bold text-blue-900">
+                  {panel.volumen_proyectado && panel.profundidad 
+                    ? (parseFloat(panel.volumen_proyectado) / parseFloat(panel.profundidad)).toFixed(1)
+                    : '0.0'
+                  } m²
+                </span>
+              </div>
+
+              {/* ID de Estado */}
+              <div className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-lg border">
+                <div className="flex items-center">
+                  <Hash size={14} className="text-gray-500 mr-2" />
+                  <span className="text-xs font-medium text-gray-500">Estado ID</span>
+                </div>
+                <span className="text-sm font-bold text-gray-900 font-mono">
+                  {panel.id_estado}
+                </span>
+              </div>
+            </div>
+
+            {/* Indicador visual del estado del panel */}
+            <div className="flex items-center justify-between py-3 px-4 bg-white border-2 border-dashed border-gray-200 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <div className={`w-3 h-3 rounded-full ${
+                  panel.Estado?.nombre?.toLowerCase() === 'finalizado' ? 'bg-green-500' :
+                  panel.Estado?.nombre?.toLowerCase() === 'activo' ? 'bg-blue-500 animate-pulse' :
+                  panel.Estado?.nombre?.toLowerCase() === 'pausado' ? 'bg-yellow-500' :
+                  'bg-gray-400'
+                }`}></div>
+                <span className="text-sm font-medium text-gray-600">
+                  Estado Operativo
+                </span>
+              </div>
+              <span className="text-sm font-bold text-gray-900 capitalize">
+                {panel.Estado?.nombre || 'Indefinido'}
+              </span>
+            </div>
+
+            {/* Color del estado (si existe) */}
+            {panel.Estado?.color_hex && (
+              <div className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-lg border">
+                <div className="flex items-center">
                   <div 
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                    style={{ width: `${panel.progreso || 0}%` }}
+                    className="w-4 h-4 rounded-full border-2 border-white shadow-sm mr-2"
+                    style={{ backgroundColor: panel.Estado.color_hex }}
                   ></div>
+                  <span className="text-xs font-medium text-gray-500">Color de Estado</span>
                 </div>
+                <span className="text-sm font-mono text-gray-700">
+                  {panel.Estado.color_hex}
+                </span>
               </div>
             )}
           </div>
@@ -181,7 +267,7 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
           <div className="flex gap-3">
             <button 
               onClick={handleAvancesClick}
-              className="flex-1 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              className="flex-1 inline-flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105"
             >
               <Activity size={16} className="mr-2" />
               Ver Avances
@@ -189,7 +275,7 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
             
             <button 
               onClick={handleEditClick}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              className="inline-flex items-center px-4 py-3 border-2 border-gray-300 rounded-lg shadow-sm text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
             >
               <Edit2 size={16} />
             </button>
@@ -204,7 +290,6 @@ const PanelCard = ({ panel, onClick, onSelectPanel }) => {
           onClose={() => setShowEditarModal(false)}
           onSuccess={() => {
             setShowEditarModal(false);
-            // Aquí podrías llamar a una función de refresh si la tienes
           }}
         />
       )}

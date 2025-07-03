@@ -10,9 +10,11 @@ import {
   Settings,
   Menu,
   X,
+  Calendar,
   Bell,
   Search,
   Zap,
+  Clock,
   MessageSquare,
   ChevronDown,
   ChevronLeft,
@@ -280,14 +282,18 @@ const MainLayout = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="hidden md:flex items-center space-x-2 bg-blue-500/20 px-4 py-2 rounded-xl border border-blue-300/30">
-                <Search size={16} className="text-white" />
-                <input
-                  type="text"
-                  placeholder="Buscar..."
-                  className="bg-transparent text-white placeholder-blue-100 border-none outline-none w-40"
-                />
+              {/* Hora fecha */}
+              <div className="flex items-center space-x-2">
+                <span className="text-white text-lg">
+                  {new Date().toLocaleDateString('es-ES', {
+                    weekday: 'long',
+                    day: 'numeric', 
+                    month: 'long',
+                    year: 'numeric'
+                  })}
+                </span>
               </div>
+
               {/* Botón de tema DESHABILITADO - modo oscuro removido */}
               {/* 
               <button
@@ -304,6 +310,7 @@ const MainLayout = () => {
               >
                 <MessageSquare size={20} />
                 <span className="absolute top-0 right-0 w-2 h-2 bg-yellow-300 rounded-full"></span>
+
               </button>
               <div className="relative ml-1">
                 <div 

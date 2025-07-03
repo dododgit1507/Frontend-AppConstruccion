@@ -91,13 +91,13 @@ const ModuleNavigation = () => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+    <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm ">
       <div className="mb-6">
         <h2 className="text-lg font-semibold text-slate-900">Módulos del Proyecto</h2>
         <p className="text-sm text-slate-600 mt-1">Acceso directo a las fases de construcción</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4" >
         {modules.map((module, index) => {
           const IconComponent = module.icon;
           const colorClasses = getColorClasses(module.color);
@@ -106,7 +106,7 @@ const ModuleNavigation = () => {
             <button
               key={index}
               onClick={() => navigate(module.path)}
-              className={`group ${colorClasses.bg} ${colorClasses.hover} border border-slate-200 hover:border-slate-300 p-4 rounded-lg transition-all duration-200 text-left hover:shadow-md`}
+              className={`group ${colorClasses.bg} ${colorClasses.hover} border border-slate-200 hover:border-slate-300 cursor-pointer p-4 rounded-lg transition-all duration-200 text-left hover:shadow-md`}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className={`p-2 ${colorClasses.icon} ${colorClasses.iconHover} rounded-lg transition-colors`}>
