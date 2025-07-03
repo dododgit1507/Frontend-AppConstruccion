@@ -12,16 +12,8 @@ export const useApp = () => {
 };
 
 export const AppProvider = ({ children }) => {
-  // Estado del tema (light/dark)
-  const [theme, setTheme] = useState(() => {
-    // Verificar si hay tema guardado en localStorage
-    const savedTheme = localStorage.getItem('c4-theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    // Si no hay tema guardado, usar preferencia del sistema
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
+  // Estado del tema (siempre light - modo oscuro deshabilitado)
+  const [theme, setTheme] = useState('light');
 
   // Estado del sidebar (abierto/cerrado en móvil)
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,23 +25,23 @@ export const AppProvider = ({ children }) => {
     language: 'es',
   });
 
-  // Efecto para aplicar el tema al documento
+  // Efecto para aplicar el tema al documento (siempre light)
   useEffect(() => {
     const root = document.documentElement;
-    root.setAttribute('data-theme', theme);
-    localStorage.setItem('c4-theme', theme);
-  }, [theme]);
+    root.setAttribute('data-theme', 'light');
+    localStorage.setItem('c4-theme', 'light');
+  }, []);
 
-  // Función para cambiar el tema
+  // Función para cambiar el tema (DESHABILITADA - siempre modo claro)
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    // No hace nada - modo oscuro deshabilitado
+    console.log('Modo oscuro deshabilitado - siempre en modo claro');
   };
 
-  // Función para cambiar a un tema específico
+  // Función para cambiar a un tema específico (DESHABILITADA - siempre modo claro)
   const setSpecificTheme = (newTheme) => {
-    if (newTheme === 'light' || newTheme === 'dark') {
-      setTheme(newTheme);
-    }
+    // No hace nada - modo oscuro deshabilitado
+    console.log('Modo oscuro deshabilitado - siempre en modo claro');
   };
 
   // Función para toggle del sidebar
@@ -69,11 +61,11 @@ export const AppProvider = ({ children }) => {
   };
 
   const value = {
-    // Tema
+    // Tema (siempre modo claro)
     theme,
     toggleTheme,
     setSpecificTheme,
-    isDark: theme === 'dark',
+    isDark: false, // Siempre false - modo oscuro deshabilitado
     
     // Sidebar
     sidebarOpen,

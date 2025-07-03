@@ -45,35 +45,36 @@
   --sidebar-text-active: 5 150 105; /* emerald-700 */
 }
 
-/* Tema Oscuro */
+/* Tema Oscuro - DESHABILITADO */
+/*
 [data-theme="dark"] {
-  --bg-primary: 17 24 39; /* gray-900 */
-  --bg-secondary: 31 41 55; /* gray-800 */
-  --bg-tertiary: 55 65 81; /* gray-700 */
-  --bg-card: 31 41 55; /* gray-800 */
-  --bg-hover: 55 65 81; /* gray-700 */
+  --bg-primary: 17 24 39;
+  --bg-secondary: 31 41 55;
+  --bg-tertiary: 55 65 81;
+  --bg-card: 31 41 55;
+  --bg-hover: 55 65 81;
   
-  --text-primary: 249 250 251; /* gray-50 */
-  --text-secondary: 209 213 219; /* gray-300 */
-  --text-tertiary: 156 163 175; /* gray-400 */
-  --text-muted: 107 114 128; /* gray-500 */
+  --text-primary: 249 250 251;
+  --text-secondary: 209 213 219;
+  --text-tertiary: 156 163 175;
+  --text-muted: 107 114 128;
   
-  --border-primary: 75 85 99; /* gray-600 */
-  --border-secondary: 55 65 81; /* gray-700 */
-  --border-focus: 52 211 153; /* emerald-400 */
+  --border-primary: 75 85 99;
+  --border-secondary: 55 65 81;
+  --border-focus: 52 211 153;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
   
-  /* Sidebar tema oscuro */
-  --sidebar-bg: 31 41 55; /* gray-800 */
-  --sidebar-border: 75 85 99; /* gray-600 */
-  --sidebar-item-hover: 55 65 81; /* gray-700 */
-  --sidebar-item-active: 67 56 202 / 0.2; /* indigo-600/20 */
-  --sidebar-text: 209 213 219; /* gray-300 */
-  --sidebar-text-active: 52 211 153; /* emerald-400 */
+  --sidebar-bg: 31 41 55;
+  --sidebar-border: 75 85 99;
+  --sidebar-item-hover: 55 65 81;
+  --sidebar-item-active: 67 56 202 / 0.2;
+  --sidebar-text: 209 213 219;
+  --sidebar-text-active: 52 211 153;
 }
+*/
 
 /* Clases utilitarias globales */
 .bg-primary { background-color: rgb(var(--bg-primary)); }

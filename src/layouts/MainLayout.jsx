@@ -13,8 +13,6 @@ import {
   Bell,
   Search,
   Zap,
-  Sun,
-  Moon,
   MessageSquare,
   ChevronDown,
   ChevronLeft,
@@ -27,7 +25,7 @@ import { useState } from 'react';
 import AIChat from '../components/AIChat/AIChat';
 
 const MainLayout = () => {
-  const { sidebarOpen, toggleSidebar, theme, toggleTheme, isDark } = useApp();
+  const { sidebarOpen, toggleSidebar } = useApp();
   const { usuario, Logout } = useAuth();
   const { proyectoActual, cambiarProyecto } = useProyecto();
   const location = useLocation();
@@ -290,13 +288,15 @@ const MainLayout = () => {
                   className="bg-transparent text-white placeholder-blue-100 border-none outline-none w-40"
                 />
               </div>
-              {/* Botón de tema temporalmente deshabilitado */}
+              {/* Botón de tema DESHABILITADO - modo oscuro removido */}
+              {/* 
               <button
                 className="p-2 text-white hover:text-white hover:bg-blue-500/30 rounded-lg"
                 title="Cambiar tema"
               >
                 {isDark ? <Sun size={20} /> : <Moon size={20} />}
               </button>
+              */}
               <button
                 onClick={() => setChatOpen(!chatOpen)}
                 className="p-2 text-white hover:text-white hover:bg-blue-500/30 rounded-lg relative"
