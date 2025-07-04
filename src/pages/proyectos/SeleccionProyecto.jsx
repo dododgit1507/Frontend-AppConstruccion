@@ -70,7 +70,11 @@ const SeleccionProyecto = () => {
   const [openProyectoModal, setOpenProyectoModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mantenimientoOpen, setMantenimientoOpen] = useState(false);
+  const { usuario, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // 🔐 Verificar si el usuario es administrador
+  const isAdmin = usuario?.rol === 'administrador';
 
   // Consulta de proyectos con React Query
   const {
@@ -78,7 +82,7 @@ const SeleccionProyecto = () => {
     isLoading,
     isError,
     error
-  } = proyectoService.useProyectoQuery();
+  } = proyectoService.useProyectoQuery(isAuthenticated);
 
   // Filtrar proyectos según término de búsqueda
   const proyectosFiltrados = proyectos?.filter(proyecto =>
@@ -88,7 +92,6 @@ const SeleccionProyecto = () => {
 
   // Usar el contexto de proyecto
   const { seleccionarProyecto } = useProyecto();
-  const { usuario } = useAuth();
 
   // Manejar selección de proyecto
   const handleSelectProyecto = (proyecto) => {
@@ -153,59 +156,61 @@ const SeleccionProyecto = () => {
                 <span className="font-medium">Inicio</span>
               </button>
 
-              {/* Mantenimiento */}
-              <div>
-                <button
-                  onClick={() => setMantenimientoOpen(!mantenimientoOpen)}
-                  className="w-full flex items-center justify-between gap-3 px-4 py-3 text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <Settings size={20} className="text-slate-500 group-hover:text-blue-600" />
-                    <span className="font-medium">Mantenimiento</span>
-                  </div>
-                  {mantenimientoOpen ? (
-                    <ChevronDown size={16} className="text-slate-400 group-hover:text-blue-600" />
-                  ) : (
-                    <ChevronRight size={16} className="text-slate-400 group-hover:text-blue-600" />
-                  )}
-                </button>
+              {/* Mantenimiento - Solo para administradores */}
+              {isAdmin && (
+                <div>
+                  <button
+                    onClick={() => setMantenimientoOpen(!mantenimientoOpen)}
+                    className="w-full flex items-center justify-between gap-3 px-4 py-3 text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Settings size={20} className="text-slate-500 group-hover:text-blue-600" />
+                      <span className="font-medium">Mantenimiento</span>
+                    </div>
+                    {mantenimientoOpen ? (
+                      <ChevronDown size={16} className="text-slate-400 group-hover:text-blue-600" />
+                    ) : (
+                      <ChevronRight size={16} className="text-slate-400 group-hover:text-blue-600" />
+                    )}
+                  </button>
 
-                {/* Submenú de Mantenimiento */}
-                {mantenimientoOpen && (
-                  <div className="ml-4 mt-2 space-y-1 border-l-2 border-slate-100 pl-4">
-                    <button
-                      onClick={() => {
-                        navigate('/seleccion-proyecto');
-                        setSidebarOpen(false);
-                      }}
-                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors group"
-                    >
-                      <Building2 size={16} className="text-slate-400 group-hover:text-blue-600" />
-                      <span>Proyectos</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate('/dashboard/empleados');
-                        setSidebarOpen(false);
-                      }}
-                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors group"
-                    >
-                      <Users size={16} className="text-slate-400 group-hover:text-blue-600" />
-                      <span>Empleados</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate('/dashboard/roles');
-                        setSidebarOpen(false);
-                      }}
-                      className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors group"
-                    >
-                      <Shield size={16} className="text-slate-400 group-hover:text-blue-600" />
-                      <span>Roles</span>
-                    </button>
-                  </div>
-                )}
-              </div>
+                  {/* Submenú de Mantenimiento */}
+                  {mantenimientoOpen && (
+                    <div className="ml-4 mt-2 space-y-1 border-l-2 border-slate-100 pl-4">
+                      <button
+                        onClick={() => {
+                          navigate('/seleccion-proyecto');
+                          setSidebarOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors group"
+                      >
+                        <Building2 size={16} className="text-slate-400 group-hover:text-blue-600" />
+                        <span>Proyectos</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate('/dashboard/empleados');
+                          setSidebarOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors group"
+                      >
+                        <Users size={16} className="text-slate-400 group-hover:text-blue-600" />
+                        <span>Empleados</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate('/dashboard/roles');
+                          setSidebarOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors group"
+                      >
+                        <Shield size={16} className="text-slate-400 group-hover:text-blue-600" />
+                        <span>Roles</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </nav>
           </div>
 
@@ -227,8 +232,9 @@ const SeleccionProyecto = () => {
           </div>
         </div>
       </div>
+
       {/* Navbar superior */}
-      <header className="from-blue-950 to-blue-800 bg-gradient-to-r  border-b border-slate-200 shadow-sm sticky top-0 z-10">
+      <header className="from-blue-950 to-blue-800 bg-gradient-to-r border-b border-slate-200 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-4">
@@ -257,6 +263,10 @@ const SeleccionProyecto = () => {
             <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
               <Building2 className="text-blue-800" />
               Proyectos
+              {/* Mostrar cantidad de proyectos y rol */}
+              <span className="text-sm font-normal text-slate-500">
+                ({proyectosFiltrados.length} {isAdmin ? 'total' : 'asignados'})
+              </span>
             </h2>
             <div className="flex items-center gap-4 flex-wrap">
               <div className="relative flex-grow max-w-xs">
@@ -269,13 +279,16 @@ const SeleccionProyecto = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <button
-                onClick={() => setOpenProyectoModal(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-blue-800 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
-              >
-                <Plus size={18} />
-                <span>Nuevo Proyecto</span>
-              </button>
+              {/* 🔐 Botón Nuevo Proyecto - Solo para administradores */}
+              {isAdmin && (
+                <button
+                  onClick={() => setOpenProyectoModal(true)}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-blue-800 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
+                >
+                  <Plus size={18} />
+                  <span>Nuevo Proyecto</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -303,20 +316,34 @@ const SeleccionProyecto = () => {
           ) : (
             <div className="bg-slate-50 p-8 rounded-lg text-center border border-slate-200">
               <p className="text-slate-600 text-lg mb-4">
-                {searchTerm ? 'No se encontraron proyectos que coincidan con la búsqueda.' : 'No hay proyectos registrados.'}
+                {searchTerm 
+                  ? 'No se encontraron proyectos que coincidan con la búsqueda.' 
+                  : isAdmin 
+                    ? 'No hay proyectos registrados.' 
+                    : 'No tienes proyectos asignados.'
+                }
               </p>
-              <button
-                onClick={() => setOpenProyectoModal(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-800 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
-              >
-                <Plus size={18} />
-                <span>Crear Primer Proyecto</span>
-              </button>
+              {/* 🔐 Botón para crear primer proyecto - Solo para administradores */}
+              {isAdmin && !searchTerm && (
+                <button
+                  onClick={() => setOpenProyectoModal(true)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-800 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium"
+                >
+                  <Plus size={18} />
+                  <span>Crear Primer Proyecto</span>
+                </button>
+              )}
+              {/* Mensaje para ingenieros sin proyectos */}
+              {!isAdmin && !searchTerm && (
+                <p className="text-sm text-slate-500 mt-2">
+                  Los proyectos son asignados por el administrador.
+                </p>
+              )}
             </div>
           )}
 
-          {/* Modal para registrar proyecto */}
-          {openProyectoModal && (
+          {/* 🔐 Modal para registrar proyecto - Solo se renderiza para administradores */}
+          {isAdmin && openProyectoModal && (
             <RegistrarProyecto onClose={() => setOpenProyectoModal(false)} />
           )}
         </div>

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect } from "react";
 import { useState } from "react";
 import api from "../api/api";
 import { toast } from "sonner";
+import { queryClient } from "../config/queryClient";
 
 // Crear el contexto de autenticacion
 const AuthContext = createContext();
@@ -83,12 +84,14 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   }
+  
   const Logout = () => {
     try {
       setLoading(true);
       
       // Remover token del axios
       delete api.defaults.headers.common['Authorization'];
+      queryClient.clear();
       
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
