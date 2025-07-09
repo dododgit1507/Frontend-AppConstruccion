@@ -1,6 +1,6 @@
 import { Truck, Users, Clock, TrendingUp } from 'lucide-react';
 
-const MetricCard = ({ title, value, icon: Icon, subtitle, trend, status, color }) => {
+const MetricCard = ({ title, value, icon: Icon, subtitle, trend, status, color, index }) => {
   const getColorClasses = (color) => {
     const colors = {
       blue: {
@@ -34,29 +34,44 @@ const MetricCard = ({ title, value, icon: Icon, subtitle, trend, status, color }
   const colorClasses = getColorClasses(color);
 
   return (
-    <div className={`${colorClasses.bg} border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200`}>
+    <div 
+      className={`${colorClasses.bg} border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 opacity-0 animate-fade-in-up`}
+      style={{ animationDelay: `${200 + (index * 100)}ms` }}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center space-x-3 mb-3">
-            <div className={`p-2 ${colorClasses.iconBg} rounded-lg`}>
-              <Icon size={20} className={colorClasses.iconColor} />
+            <div className={`p-2 ${colorClasses.iconBg} rounded-lg transition-all duration-300 hover:scale-110`}>
+              <Icon size={20} className={`${colorClasses.iconColor} transition-transform duration-300`} />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-900">{title}</p>
+              <p className="text-sm font-medium text-slate-900 transition-colors duration-300">
+                {title}
+              </p>
               {status && (
                 <div className="flex items-center space-x-1 mt-1">
-                  <div className={`w-2 h-2 rounded-full ${status === 'active' ? 'bg-emerald-500' : 'bg-slate-400'}`}></div>
-                  <span className="text-xs text-slate-500">{status === 'active' ? 'Activo' : 'Inactivo'}</span>
+                  <div className={`w-2 h-2 rounded-full transition-all duration-300 ${status === 'active' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></div>
+                  <span className="text-xs text-slate-500 transition-colors duration-300">
+                    {status === 'active' ? 'Activo' : 'Inactivo'}
+                  </span>
                 </div>
               )}
             </div>
           </div>
-          <p className="text-2xl font-bold text-slate-900 mb-1">{value}</p>
-          {subtitle && <p className="text-sm text-slate-600">{subtitle}</p>}
+          <p className="text-2xl font-bold text-slate-900 mb-1 transition-colors duration-300">
+            {value}
+          </p>
+          {subtitle && (
+            <p className="text-sm text-slate-600 transition-colors duration-300">
+              {subtitle}
+            </p>
+          )}
           {trend && (
-            <div className="flex items-center space-x-1 mt-2">
-              <TrendingUp size={14} className={colorClasses.accent} />
-              <span className={`text-xs ${colorClasses.accent}`}>{trend}</span>
+            <div className="flex items-center space-x-1 mt-2 transition-all duration-300 hover:translate-x-1">
+              <TrendingUp size={14} className={`${colorClasses.accent} transition-transform duration-300`} />
+              <span className={`text-xs ${colorClasses.accent} transition-colors duration-300`}>
+                {trend}
+              </span>
             </div>
           )}
         </div>
@@ -106,18 +121,42 @@ const OperationalMetrics = () => {
   ];
 
   return (
-    <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-slate-900">Métricas Operativas</h2>
-        <p className="text-sm text-slate-600 mt-1">Indicadores clave de rendimiento</p>
+    <>
+      {/* CSS para animaciones suaves */}
+      <style jsx>{`
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          } 
+        }
+      `}</style>
+
+      <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 opacity-0 animate-fade-in-up">
+        <div className="mb-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          <h2 className="text-lg font-semibold text-slate-900 transition-colors duration-300">
+            Métricas Operativas
+          </h2>
+          <p className="text-sm text-slate-600 mt-1 transition-colors duration-300">
+            Indicadores clave de rendimiento
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {metrics.map((metric, index) => (
+            <MetricCard key={index} {...metric} index={index} />
+          ))}
+        </div>
       </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {metrics.map((metric, index) => (
-          <MetricCard key={index} {...metric} />
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 

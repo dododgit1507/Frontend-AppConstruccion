@@ -91,39 +91,86 @@ const ModuleNavigation = () => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm ">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-slate-900">Módulos del Proyecto</h2>
-        <p className="text-sm text-slate-600 mt-1">Acceso directo a las fases de construcción</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4" >
-        {modules.map((module, index) => {
-          const IconComponent = module.icon;
-          const colorClasses = getColorClasses(module.color);
-          
-          return (
-            <button
-              key={index}
-              onClick={() => navigate(module.path)}
-              className={`group ${colorClasses.bg} ${colorClasses.hover} border border-slate-200 hover:border-slate-300 cursor-pointer p-4 rounded-lg transition-all duration-200 text-left hover:shadow-md`}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className={`p-2 ${colorClasses.icon} ${colorClasses.iconHover} rounded-lg transition-colors`}>
-                  <IconComponent size={20} className={colorClasses.iconColor} />
+    <>
+      {/* CSS para animaciones suaves */}
+      <style jsx>{`
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .animate-scale-in {
+          animation: scaleIn 0.4s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      `}</style>
+
+      <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 opacity-0 animate-fade-in-up">
+        <div className="mb-6 opacity-0 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          <h2 className="text-lg font-semibold text-slate-900 transition-colors duration-300">
+            Módulos del Proyecto
+          </h2>
+          <p className="text-sm text-slate-600 mt-1 transition-colors duration-300">
+            Acceso directo a las fases de construcción
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {modules.map((module, index) => {
+            const IconComponent = module.icon;
+            const colorClasses = getColorClasses(module.color);
+            
+            return (
+              <button
+                key={index}
+                onClick={() => navigate(module.path)}
+                className={`group ${colorClasses.bg} ${colorClasses.hover} border border-slate-200 hover:border-slate-300 cursor-pointer p-4 rounded-lg transition-all duration-300 text-left hover:shadow-md hover:scale-105 opacity-0 animate-scale-in`}
+                style={{ animationDelay: `${200 + (index * 100)}ms` }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`p-2 ${colorClasses.icon} ${colorClasses.iconHover} rounded-lg transition-all duration-300 group-hover:scale-110`}>
+                    <IconComponent size={20} className={`${colorClasses.iconColor} transition-transform duration-300`} />
+                  </div>
+                  <ArrowRight 
+                    size={16} 
+                    className="text-slate-400 group-hover:text-slate-600 transition-all duration-300 group-hover:translate-x-1" 
+                  />
                 </div>
-                <ArrowRight size={16} className="text-slate-400 group-hover:text-slate-600 transition-colors" />
-              </div>
-              
-              <div className="space-y-2">
-                <h3 className="font-medium text-slate-900 text-sm">{module.title}</h3>
-                <p className="text-xs text-slate-600">{module.description}</p>
-              </div>
-            </button>
-          );
-        })}
+                
+                <div className="space-y-2">
+                  <h3 className="font-medium text-slate-900 text-sm transition-colors duration-300 group-hover:text-slate-800">
+                    {module.title}
+                  </h3>
+                  <p className="text-xs text-slate-600 transition-colors duration-300 group-hover:text-slate-700">
+                    {module.description}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
